@@ -50,5 +50,9 @@
 	<array>
 	<string>https</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Aplikasi membutuhkan akses ke perpustakaan foto Anda untuk memilih file.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Aplikasi membutuhkan akses ke dokumen Anda untuk memilih file.</string>
 </dict>
 </plist>
