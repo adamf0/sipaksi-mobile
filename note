@@ -1,0 +1,420 @@
+FileTypeGroup.getExtensions([
+        FileTypeGroup.image,
+        FileTypeGroup.document,
+      ]),
+
+
+//ini multiple
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class FileLifecycleManager with WidgetsBindingObserver {
+  List<PlatformFile> selectedFiles = [];
+
+  void init() {
+    WidgetsBinding.instance.addObserver(this);
+    loadSavedFiles(); // Load saved files when initializing
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  bool lifecycleHasCloseOrDestroy(AppLifecycleState state) {
+    return [AppLifecycleState.detached, AppLifecycleState.inactive]
+        .contains(state);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (lifecycleHasCloseOrDestroy(state)) {
+      _clearSavedFilePaths();
+    }
+  }
+
+  Future<void> loadSavedFiles() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? filePaths = prefs.getStringList('selectedFilePaths');
+
+    if (filePaths != null) {
+      selectedFiles.clear();
+      for (var filePath in filePaths) {
+        if (File(filePath).existsSync()) {
+          selectedFiles.add(PlatformFile(
+            path: filePath,
+            name: filePath.split('/').last,
+            size: File(filePath).lengthSync(),
+          ));
+        }
+      }
+    }
+  }
+
+  Future<void> saveFilePaths(List<String> filePaths) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('selectedFilePaths', filePaths);
+    selectedFiles = filePaths.map((path) {
+      return PlatformFile(
+        path: path,
+        name: path.split('/').last,
+        size: File(path).lengthSync(),
+      );
+    }).toList();
+  }
+
+  Future<void> _clearSavedFilePaths() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('selectedFilePaths');
+    selectedFiles.clear(); // Clear the selected files list
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/FileLifecycleManager.dart';
+
+class FileUploadExample extends StatefulWidget {
+  @override
+  _FileUploadExampleState createState() => _FileUploadExampleState();
+}
+
+class _FileUploadExampleState extends State<FileUploadExample>
+    with WidgetsBindingObserver {
+  final FileLifecycleManager _fileLifecycleManager = FileLifecycleManager();
+  List<double> _uploadProgresses = [];
+  List<bool> _uploadingStates = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fileLifecycleManager.init();
+    _uploadProgresses =
+        List<double>.filled(_fileLifecycleManager.selectedFiles.length, 0.0);
+    _uploadingStates =
+        List<bool>.filled(_fileLifecycleManager.selectedFiles.length, false);
+  }
+
+  @override
+  void dispose() {
+    _fileLifecycleManager.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickFiles() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: [
+        'jpg',
+        'png',
+        'pdf',
+        'doc'
+      ], // Add your allowed extensions
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      List<String> filePaths = result.paths.whereType<String>().toList();
+      await _fileLifecycleManager.saveFilePaths(filePaths);
+      setState(() {
+        _uploadProgresses = List<double>.filled(
+            _fileLifecycleManager.selectedFiles.length, 0.0);
+        _uploadingStates = List<bool>.filled(
+            _fileLifecycleManager.selectedFiles.length, false);
+      });
+    }
+  }
+
+  Future<void> _uploadFiles() async {
+    if (_fileLifecycleManager.selectedFiles.isNotEmpty) {
+      List<Future<void>> uploadFutures = [];
+
+      for (int i = 0; i < _fileLifecycleManager.selectedFiles.length; i++) {
+        final file = _fileLifecycleManager.selectedFiles[i];
+        uploadFutures.add(_uploadFile(file, i));
+      }
+
+      await Future.wait(uploadFutures); // Wait for all uploads to complete
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('All files successfully uploaded!')));
+    }
+  }
+
+  Future<void> _uploadFile(PlatformFile file, int index) async {
+    _uploadingStates[index] =
+        true; // Set the uploading state to true for this file
+    Dio dio = Dio();
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(file.path!, filename: file.name),
+    });
+
+    try {
+      await dio.post('https://your-api-endpoint.com/upload', data: formData,
+          onSendProgress: (sent, total) {
+        setState(() {
+          _uploadProgresses[index] =
+              sent / total; // Update progress for this specific file
+        });
+      });
+    } catch (e) {
+      print('Upload failed for ${file.name}: $e');
+    } finally {
+      setState(() {
+        _uploadingStates[index] =
+            false; // Reset uploading state after completion
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Concurrent File Upload Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _fileLifecycleManager.selectedFiles.isNotEmpty
+                ? Column(
+                    children: List.generate(
+                        _fileLifecycleManager.selectedFiles.length, (index) {
+                      var file = _fileLifecycleManager.selectedFiles[index];
+                      return Column(
+                        children: [
+                          Text('File: ${file.name} (${file.size} bytes)'),
+                          LinearProgressIndicator(
+                              value: _uploadProgresses[index]),
+                          SizedBox(height: 10),
+                          Text(_uploadingStates[index]
+                              ? 'Uploading...'
+                              : 'Upload Complete'),
+                          SizedBox(height: 20),
+                        ],
+                      );
+                    }),
+                  )
+                : Text('No files selected'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickFiles,
+              child: Text('Pick Files'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _uploadFiles,
+              child: Text('Upload Files'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+//ini single
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'FileTypeGroup.dart';
+
+class FileLifecycleManager with WidgetsBindingObserver {
+  PlatformFile? selectedFile;
+
+  void init() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  bool lifecycleHasCloseOrDestroy(AppLifecycleState state) {
+    return [AppLifecycleState.detached, AppLifecycleState.inactive]
+        .contains(state);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (lifecycleHasCloseOrDestroy(state)) {
+      _clearSavedFilePath();
+    }
+  }
+
+  Future<void> loadSavedFile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? filePath = prefs.getString('selectedFilePath');
+
+    if (filePath != null && File(filePath).existsSync()) {
+      selectedFile = PlatformFile(
+        path: filePath,
+        name: filePath.split('/').last,
+        size: File(filePath).lengthSync(),
+      );
+    }
+  }
+
+  Future<void> saveFilePath(String filePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedFilePath', filePath);
+  }
+
+  Future<void> _clearSavedFilePath() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('selectedFilePath');
+  }
+}
+
+class FileUploadExample extends StatefulWidget {
+  @override
+  _FileUploadExampleState createState() => _FileUploadExampleState();
+}
+
+class _FileUploadExampleState<T extends FileUploadExample>
+    extends State<T> with WidgetsBindingObserver {
+  double _uploadProgress = 0.0;
+  bool _isUploading = false;
+  final FileLifecycleManager _fileLifecycleManager = FileLifecycleManager();
+
+  @override
+  void initState() {
+    super.initState();
+    _fileLifecycleManager.init();
+    _fileLifecycleManager.loadSavedFile(); // Load saved file if available on app start
+  }
+
+  @override
+  void dispose() {
+    _fileLifecycleManager.dispose();
+    super.dispose();
+  }
+
+  void _onProgressUpdate(double progress) {
+    setState(() {
+      _uploadProgress = progress;
+    });
+  }
+
+  void _onUploadStart() {
+    setState(() {
+      _isUploading = true;
+    });
+  }
+
+  void _onUploadComplete() {
+    setState(() {
+      _uploadProgress = 0.0;
+      _isUploading = false;
+      _fileLifecycleManager.selectedFile = null; // Clear selected file
+    });
+  }
+
+  void _onUploadFailed() {
+    setState(() {
+      _isUploading = false;
+    });
+  }
+
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: FileTypeGroup.getExtensions([
+        FileTypeGroup.image,
+        FileTypeGroup.document,
+      ]),
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      setState(() {
+        _fileLifecycleManager.selectedFile = result.files.single;
+      });
+      await _fileLifecycleManager.saveFilePath(_fileLifecycleManager.selectedFile!.path!);
+    }
+  }
+
+  Future<void> _uploadFile() async {
+    if (_fileLifecycleManager.selectedFile != null) {
+      _onUploadStart();
+      try {
+        // Implement your upload service here
+        Dio dio = Dio();
+        FormData formData = FormData.fromMap({
+          'file': await MultipartFile.fromFile(_fileLifecycleManager.selectedFile!.path!,
+              filename: _fileLifecycleManager.selectedFile!.name),
+        });
+        await dio.post('https://your-api-endpoint.com/upload', data: formData,
+            onSendProgress: (sent, total) {
+          _onProgressUpdate(sent / total);
+        });
+        _onUploadComplete();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('File berhasil diunggah!')));
+      } catch (e) {
+        _onUploadFailed();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Gagal mengunggah file: $e')));
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('File Upload Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _fileLifecycleManager.selectedFile != null
+                ? Text(
+                    'File: ${_fileLifecycleManager.selectedFile!.name} (${_fileLifecycleManager.selectedFile!.size} bytes)')
+                : Text('Tidak ada file yang dipilih'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickFile,
+              child: Text('Pilih File'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _uploadFile,
+              child: Text('Unggah File'),
+            ),
+            SizedBox(height: 20),
+            ProgressIndicatorWidget(
+                progress: _uploadProgress, isUploading: _isUploading),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProgressIndicatorWidget extends StatelessWidget {
+  final double progress;
+  final bool isUploading;
+
+  const ProgressIndicatorWidget({
+    required this.progress,
+    required this.isUploading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return isUploading
+        ? Column(
+            children: [
+              Text('Mengunggah: ${(progress * 100).toStringAsFixed(0)}%'),
+              SizedBox(height: 10),
+              LinearProgressIndicator(value: progress),
+            ],
+          )
+        : Text('Tidak ada unggahan yang sedang berlangsung');
+  }
+}
