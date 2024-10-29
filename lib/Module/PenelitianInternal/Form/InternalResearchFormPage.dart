@@ -253,8 +253,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
       ),
     ];
 
-    List<Widget> getWidgets(String type, List<ItemsTimeline> items, int node) {
-      List<Widget> children = [];
+    List<Widget?> getWidgets(String type, List<ItemsTimeline> items, int node) {
+      List<Widget?> children = [];
 
       for (var item in items) {
         if (type == "indicator") {
@@ -297,15 +297,12 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
               isDone: item.isDone,
               required: item.required,
               subRender: item.subItems.isNotEmpty
-                  ? Container(
-                      //masih gagal listview dalam listview
-                      height: 110,
-                      child: Timeline(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        indicators: getWidgets("indicator", item.subItems, 1),
-                        children: getWidgets("child", item.subItems, 1),
-                      ),
+                  ? Timeline(
+                      hideIndicator: [],
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      indicators: getWidgets("indicator", item.subItems, 1),
+                      children: getWidgets("child", item.subItems, 1),
                     )
                   : null,
               onBackPressed: item.action ?? () {},
@@ -350,6 +347,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
               const HeaderComponent(),
               const SizedBox(height: 10),
               Timeline(
+                hideIndicator: [8],
                 indicators: getWidgets("indicator", list, 0),
                 children: getWidgets("child", list, 0),
               )

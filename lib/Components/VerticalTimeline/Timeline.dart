@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class Timeline extends StatelessWidget {
   const Timeline({
     Key? key,
     required this.children,
-    this.indicators,
+    required this.indicators,
     this.isLeftAligned = true,
     this.itemGap = 12.0,
     this.gutterSpacing = 4.0,
@@ -16,22 +17,23 @@ class Timeline extends StatelessWidget {
     this.primary = false,
     this.reverse = false,
     this.indicatorSize = 30.0,
-    this.lineGap = 4.0,
+    this.lineGap = 0.0,
     this.indicatorColor = Colors.blue,
     this.indicatorStyle = PaintingStyle.fill,
     this.strokeCap = StrokeCap.butt,
     this.strokeWidth = 2.0,
     this.style = PaintingStyle.stroke,
+    required this.hideIndicator,
   })  : itemCount = children.length,
         assert(itemGap >= 0),
         assert(lineGap >= 0),
         assert(indicators == null || children.length == indicators.length),
         super(key: key);
 
-  final List<Widget> children;
+  final List<Widget?> children;
   final double itemGap;
   final double gutterSpacing;
-  final List<Widget>? indicators;
+  final List<Widget?> indicators;
   final bool isLeftAligned;
   final EdgeInsets padding;
   final ScrollController? controller;
@@ -49,58 +51,88 @@ class Timeline extends StatelessWidget {
   final StrokeCap strokeCap;
   final double strokeWidth;
   final PaintingStyle style;
+  final List<int> hideIndicator;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: padding,
-      separatorBuilder: (_, __) => SizedBox(height: itemGap),
-      physics: physics,
-      shrinkWrap: shrinkWrap,
-      itemCount: itemCount,
-      controller: controller,
-      reverse: reverse,
-      primary: primary,
-      itemBuilder: (context, index) {
-        final child = children[index];
-        // ignore: no_leading_underscores_for_local_identifiers
-        final _indicators = indicators;
+    List<Widget> tileLineItems = [];
+    for (int index = 0; index < itemCount; index++) {
+      final child = children[index];
+      // ignore: no_leading_underscores_for_local_identifiers
+      final _indicators = indicators;
 
-        Widget? indicator;
-        if (_indicators != null) {
-          indicator = _indicators[index];
-        }
+      Widget? indicator;
+      if (_indicators != null) {
+        indicator = _indicators[index];
+      }
 
-        final isFirst = index == 0;
-        final isLast = index == itemCount - 1;
+      final isFirst = index == 0;
+      final isLast = index == itemCount - 1;
 
-        final timelineTile = <Widget>[
-          CustomPaint(
-            foregroundPainter: _TimelinePainter(
-              hideDefaultIndicator: indicator != null,
-              lineColor: Theme.of(context).colorScheme.surfaceDim,
-              indicatorColor: indicatorColor,
-              indicatorSize: indicatorSize,
-              indicatorStyle: indicatorStyle,
-              isFirst: isFirst,
-              isLast: isLast,
-              lineGap: lineGap,
-              strokeCap: strokeCap,
-              strokeWidth: strokeWidth,
-              style: style,
-              itemGap: itemGap,
-            ),
-            child: SizedBox(
-              height: double.infinity,
-              width: indicatorSize,
-              child: indicator ?? SizedBox.shrink(),
-            ),
+      print('${hideIndicator.toString()} = ${index}');
+      bool unhide = true;
+      if (hideIndicator != null) {
+        unhide = hideIndicator.contains(index);
+      } else {
+        unhide = true;
+      }
+      final timelineTile = <Widget>[
+        CustomPaint(
+          foregroundPainter: _TimelinePainter(
+            hideDefaultIndicator: true,
+            lineColor: Theme.of(context).colorScheme.surfaceDim,
+            indicatorColor: indicatorColor,
+            indicatorSize: indicatorSize,
+            indicatorStyle: indicatorStyle,
+            isFirst: isFirst,
+            isLast: isLast,
+            lineGap: lineGap,
+            strokeCap: strokeCap,
+            strokeWidth: strokeWidth,
+            style: style,
+            itemGap: itemGap,
           ),
-          SizedBox(width: gutterSpacing),
-          Expanded(child: child),
-        ];
+          child: SizedBox(
+            height: double.infinity,
+            width: indicatorSize,
+            child: !unhide
+                ? indicator
+                : CustomPaint(
+                    foregroundPainter: _TimelinePainter(
+                      hideDefaultIndicator: true,
+                      lineColor: Theme.of(context).colorScheme.surfaceDim,
+                      indicatorColor: indicatorColor,
+                      indicatorSize: indicatorSize,
+                      indicatorStyle: indicatorStyle,
+                      isFirst: isFirst,
+                      isLast: isLast,
+                      lineGap: lineGap,
+                      strokeCap: strokeCap,
+                      strokeWidth: strokeWidth,
+                      style: style,
+                      itemGap: itemGap,
+                    ),
+                    child: SizedBox(
+                      child: !unhide
+                          ? indicator
+                          : Transform.rotate(
+                              angle: 90 * math.pi / 180,
+                              child: Divider(
+                                thickness: strokeWidth,
+                                color: Theme.of(context).colorScheme.surfaceDim,
+                              ),
+                            ),
+                    ),
+                  ),
+          ),
+        ),
+        SizedBox(width: gutterSpacing),
+        Expanded(child: child ?? Container()),
+      ];
 
-        return IntrinsicHeight(
+      tileLineItems.add(Padding(
+        padding: EdgeInsets.symmetric(vertical: child is SizedBox ? 2 : 0),
+        child: IntrinsicHeight(
           child: child is SizedBox
               ? indicator
               : Row(
@@ -109,9 +141,24 @@ class Timeline extends StatelessWidget {
                       ? timelineTile
                       : timelineTile.reversed.toList(),
                 ),
-        );
-      },
+        ),
+      ));
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: tileLineItems,
     );
+    // return ListView.separated(
+    //   padding: padding,
+    //   separatorBuilder: (_, __) => SizedBox(height: itemGap),
+    //   physics: physics,
+    //   shrinkWrap: shrinkWrap,
+    //   itemCount: itemCount,
+    //   controller: controller,
+    //   reverse: reverse,
+    //   primary: primary,
+    //   itemBuilder: (context, index) {},
+    // );
   }
 }
 
@@ -172,11 +219,11 @@ class _TimelinePainter extends CustomPainter {
     if (!isFirst) canvas.drawLine(top, centerTop, linePaint);
     if (!isLast) canvas.drawLine(centerBottom, bottom, linePaint);
 
-    if (!hideDefaultIndicator) {
-      final Offset offsetCenter = size.centerLeft(Offset(indicatorRadius, 0));
+    // if (!hideDefaultIndicator) {
+    //   final Offset offsetCenter = size.centerLeft(Offset(indicatorRadius, 0));
 
-      canvas.drawCircle(offsetCenter, indicatorRadius, circlePaint);
-    }
+    //   canvas.drawCircle(offsetCenter, indicatorRadius, circlePaint);
+    // }
   }
 
   @override
