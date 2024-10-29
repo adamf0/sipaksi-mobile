@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/VerticalTimeline/ItemsTimeline.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitiDosenPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiNonDosenPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunUsulanPage.dart';
 import 'package:sipaksi/Components/VerticalTimeline/Timeline.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/PrioritasRisetPage.dart';
@@ -119,8 +121,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
           ),
           ItemsTimeline(
             title: "Anggota Peneliti (Mahasiswa)",
-            description:
-                "pada tahap ini anda harus menyetor data daftar mahasiswa unpak yang ikut dalam penelitian ini",
+            // description:
+            //     "pada tahap ini anda harus menyetor data daftar mahasiswa unpak yang ikut dalam penelitian ini",
             required: true,
             isDone: true,
             action: () {},
@@ -129,14 +131,30 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 title: "Data Mahasiswa",
                 required: true,
                 isDone: true,
-                action: () {},
+                action: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AnggotaPenelitiMahasiswaPage(),
+                    ),
+                  );
+                },
                 subItems: [],
               ),
               ItemsTimeline(
                 title: "Data MBKM",
                 required: true,
                 isDone: true,
-                action: () {},
+                action: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AnggotaPenelitiMahasiswaPage(),
+                    ),
+                  );
+                },
                 subItems: [],
               ),
             ],
@@ -147,7 +165,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus menyetor data daftar dosen diluar unpak atau bukan dosen yang berkontribusi dalam penelitian ini",
             required: true,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AnggotaPenelitiNonDosenPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
         ],
@@ -267,11 +292,22 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             }
           } else {
             children.add(Section(
-              title: item
-                  .title, //sub header; disini masih ada timeline dan isDone harus bersal dari 2 timeline tersebut
+              title: item.title,
               subtitle: item.description,
               isDone: item.isDone,
               required: item.required,
+              subRender: item.subItems.isNotEmpty
+                  ? Container(
+                      //masih gagal listview dalam listview
+                      height: 110,
+                      child: Timeline(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        indicators: getWidgets("indicator", item.subItems, 1),
+                        children: getWidgets("child", item.subItems, 1),
+                      ),
+                    )
+                  : null,
               onBackPressed: item.action ?? () {},
             ));
           }
@@ -487,6 +523,7 @@ class Section extends StatelessWidget {
   final String? subtitle;
   final bool isDone;
   final bool required;
+  final Widget? subRender;
   final VoidCallback onBackPressed;
 
   const Section({
@@ -495,6 +532,7 @@ class Section extends StatelessWidget {
     this.subtitle,
     this.isDone = false,
     this.required = false,
+    this.subRender,
     required this.onBackPressed,
   }) : super(key: key);
 
@@ -507,74 +545,75 @@ class Section extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                  child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        decoration: isDone ? TextDecoration.lineThrough : null,
-                        fontWeight: FontWeight.w300,
-                        color: isDone
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
-                    TextSpan(
-                      text: required ? " *" : "",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-              (subtitle != null
-                  ? Container()
-                  : Transform.rotate(
-                      angle: 180 * math.pi / 180,
-                      child: IconButton(
-                        iconSize: 14,
-                        onPressed: onBackPressed,
-                        icon: Icon(
-                          Icons.arrow_back_ios_outlined,
-                          color: isDone
-                              ? Theme.of(context).colorScheme.tertiary
-                              : Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                    )),
-            ],
-          ),
-          (subtitle != null
-              ? Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        subtitle ?? "",
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: title,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
+                          decoration:
+                              isDone ? TextDecoration.lineThrough : null,
                           fontWeight: FontWeight.w300,
                           color: isDone
                               ? Theme.of(context).colorScheme.secondary
                               : Theme.of(context).colorScheme.tertiary,
                         ),
                       ),
-                    ),
-                    Transform.rotate(
-                      angle: 180 * math.pi / 180,
-                      child: IconButton(
-                        iconSize: 14,
-                        onPressed: onBackPressed,
-                        icon: const Icon(Icons.arrow_back_ios_outlined),
+                      TextSpan(
+                        text: required ? " *" : "",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              if (subtitle == null && subRender == null)
+                Transform.rotate(
+                  angle: 180 * math.pi / 180,
+                  child: IconButton(
+                    iconSize: 14,
+                    onPressed: onBackPressed,
+                    icon: Icon(
+                      Icons.arrow_back_ios_outlined,
+                      color: isDone
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.secondary,
                     ),
-                  ],
-                )
-              : Container()),
+                  ),
+                ),
+            ],
+          ),
+          if (subtitle != null)
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    subtitle ?? "",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: isDone
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+                Transform.rotate(
+                  angle: 180 * math.pi / 180,
+                  child: IconButton(
+                    iconSize: 14,
+                    onPressed: onBackPressed,
+                    icon: const Icon(Icons.arrow_back_ios_outlined),
+                  ),
+                ),
+              ],
+            ),
+          if (subRender != null) Flexible(child: subRender!),
         ],
       ),
     );

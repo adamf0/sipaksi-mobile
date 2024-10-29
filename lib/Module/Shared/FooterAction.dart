@@ -5,10 +5,12 @@ class FooterAction extends StatelessWidget {
     Key? key,
     required this.onPress,
     required this.optionalBuilder,
+    required this.isLoading,
   }) : super(key: key);
 
   final Function(double height) onPress;
   final Widget Function(double height) optionalBuilder;
+  final ValueNotifier<bool> isLoading;
 
   double getWrapHeight(BuildContext context) {
     final renderBox = context.findRenderObject() as RenderBox?;
@@ -17,7 +19,6 @@ class FooterAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = getWrapHeight(context);
     return Container(
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       width: double.infinity,
@@ -25,18 +26,28 @@ class FooterAction extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          optionalBuilder(height),
-          TextButton(
-            onPressed: () {
-              onPress(height);
+          optionalBuilder(getWrapHeight(context)),
+          ValueListenableBuilder(
+            valueListenable: isLoading,
+            builder: (context, loading, child) {
+              return loading
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    )
+                  : TextButton(
+                      onPressed: () {
+                        onPress(getWrapHeight(context));
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        'Simpan',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    );
             },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black,
-            ),
-            child: const Text(
-              'Simpan',
-              style: TextStyle(fontSize: 14),
-            ),
           ),
         ],
       ),

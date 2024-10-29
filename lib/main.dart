@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/ColorExtension.dart';
 import 'package:sipaksi/Module/Login/LoginPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitiMahasiswaPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitiDosenPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/InternalResearchFormPage.dart';
 
 void main() {

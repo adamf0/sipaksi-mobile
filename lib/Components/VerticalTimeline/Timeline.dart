@@ -93,7 +93,7 @@ class Timeline extends StatelessWidget {
             child: SizedBox(
               height: double.infinity,
               width: indicatorSize,
-              child: indicator,
+              child: indicator ?? SizedBox.shrink(),
             ),
           ),
           SizedBox(width: gutterSpacing),

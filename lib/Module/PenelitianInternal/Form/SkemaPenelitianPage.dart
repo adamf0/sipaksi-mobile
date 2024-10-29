@@ -41,6 +41,7 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
 
   late List<String> errorMessages = [];
   late Future<List<Post>> postsFuture;
+  ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   @override
   void initState() {
@@ -89,7 +90,8 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
             Icons.arrow_back,
             color: Colors.white,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () =>
+              !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
@@ -287,20 +289,28 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
             ),
           ),
           FooterAction(
+            isLoading: isLoading,
             optionalBuilder: (height) => Container(),
-            onPress: (double height) => {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Data berhasil disimpan!'),
-                  duration: const Duration(seconds: 2),
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.only(
-                    left: 8,
-                    right: 8,
-                    bottom: height + 8,
-                  ),
-                ),
-              )
+            onPress: (double height) {
+              if (!isLoading.value) {
+                isLoading.value = true;
+                Future.delayed(const Duration(seconds: 2), () {
+                  isLoading.value = false;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Data berhasil disimpan!'),
+                      duration: const Duration(seconds: 2),
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.only(
+                        left: 8,
+                        right: 8,
+                        bottom: height + 8,
+                      ),
+                    ),
+                  );
+                });
+              }
+              print("footerHeight: ${height.toString()}");
             },
           ),
         ],
