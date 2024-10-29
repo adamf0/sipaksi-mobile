@@ -9,12 +9,14 @@ class DropdownSearch extends StatefulWidget {
   final ValueNotifier<List<DropdownItems>> badgesNotifier;
   final ValueNotifier<List<DropdownItems>> filteredNotifier;
   final Future<void> Function(String query) fetchUsers;
+  final Function()? eventChange;
 
   const DropdownSearch({
     Key? key,
     required this.badgesNotifier,
     required this.filteredNotifier,
     required this.fetchUsers,
+    this.eventChange,
   }) : super(key: key);
 
   @override
@@ -80,6 +82,7 @@ class _DropdownSearchState extends State<DropdownSearch> {
                               widget.badgesNotifier.value = [
                                 ...widget.badgesNotifier.value
                               ]..remove(badge);
+                              widget.eventChange?.call();
                             },
                           ),
                         )
@@ -175,8 +178,8 @@ class _DropdownSearchState extends State<DropdownSearch> {
                                   var selected = filtered[index];
                                   bool isDisabled = filter == selected.key;
 
-                                  print(
-                                      "Filter $filter; selected: ${selected.text}; disabled: ${isDisabled ? 'y' : 'n'}");
+                                  // print(
+                                  //     "Filter $filter; selected: ${selected.text}; disabled: ${isDisabled ? 'y' : 'n'}");
 
                                   return GestureDetector(
                                     onTap: () {
@@ -185,6 +188,7 @@ class _DropdownSearchState extends State<DropdownSearch> {
                                           // ...widget.badgesNotifier.value,
                                           selected,
                                         ];
+                                        widget.eventChange?.call();
                                         Navigator.of(context).pop();
                                       }
                                     },

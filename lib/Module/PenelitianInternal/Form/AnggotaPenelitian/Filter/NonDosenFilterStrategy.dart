@@ -1,4 +1,4 @@
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Filter/FilterStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 
 class NonDosenFilterStrategy implements FilterStrategy<Post> {

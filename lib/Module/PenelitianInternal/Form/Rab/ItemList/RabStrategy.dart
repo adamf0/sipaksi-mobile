@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/ItemListStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 
-class NonDosenItemListStrategy implements ItemListStrategy<Post> {
+class RabStrategy implements ItemListStrategy<Post> {
   @override
   Widget buildTile(
     BuildContext context,

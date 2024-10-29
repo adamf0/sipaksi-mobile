@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 
-class DosenFetchStrategy implements FetchStrategy<Post> {
+class LuaranWajibFetchStrategy implements FetchStrategy<Post> {
   final Dio _dio;
 
-  DosenFetchStrategy()
+  LuaranWajibFetchStrategy()
       : _dio = Dio(BaseOptions(
           baseUrl: "https://jsonplaceholder.typicode.com",
           headers: {HttpHeaders.contentTypeHeader: 'application/json'},

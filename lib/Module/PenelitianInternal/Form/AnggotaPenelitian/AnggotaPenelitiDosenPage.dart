@@ -47,7 +47,7 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
-          "Form Penelitian Internal",
+          "Anggota Penelitian (Dosen)",
           style: TextStyle(color: Colors.white),
         ),
       ),

@@ -58,7 +58,7 @@ class _AnggotaPenelitiNonDosenPageState
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
-          "Form Penelitian Internal",
+          "Anggota Penelitian (Non Dosen / Dosen Luar)",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -75,30 +75,35 @@ class _AnggotaPenelitiNonDosenPageState
                         anggotaPenelitianManager.updateSearchTerm(term);
                       }),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        _showBottomSheet(context);
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: Theme.of(context).colorScheme.primary,
+                    Wrap(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _showBottomSheet(context);
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor:
+                                Theme.of(context).colorScheme.error,
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Tambah Data',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          )
-                        ],
-                      ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Icons.add,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Tambah Data',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     CustomListView<Post>(
                       width: MediaQuery.of(context).size.width,
@@ -131,18 +136,20 @@ class _AnggotaPenelitiNonDosenPageState
                 getListSelected().isNotEmpty || isLoading.value
                     ? TextButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Data berhasil hapus!'),
-                              duration: const Duration(seconds: 2),
-                              behavior: SnackBarBehavior.floating,
-                              margin: EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                                bottom: height + 8,
-                              ),
-                            ),
-                          );
+                          !isLoading.value
+                              ? ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text('Data berhasil hapus!'),
+                                    duration: const Duration(seconds: 2),
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: EdgeInsets.only(
+                                      left: 8,
+                                      right: 8,
+                                      bottom: height + 8,
+                                    ),
+                                  ),
+                                )
+                              : null;
                         },
                         style: TextButton.styleFrom(
                           foregroundColor: Theme.of(context).colorScheme.error,

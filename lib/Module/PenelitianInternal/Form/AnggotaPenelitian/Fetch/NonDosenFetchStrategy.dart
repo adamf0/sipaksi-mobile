@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Fetch/FetchStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 
 class NonDosenFetchStrategy implements FetchStrategy<Post> {

@@ -44,7 +44,7 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
-          "Form Penelitian Internal",
+          "Judul & Tahun Penelitian",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -76,14 +76,16 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
                       decoration: InputDecoration(
                         errorText: "belum diisi",
                         hintStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.outline),
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 6),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1),
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -93,20 +95,23 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1),
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1,
+                          ),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.error,
-                              width: 1),
+                            color: Theme.of(context).colorScheme.error,
+                            width: 1,
+                          ),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.error,
-                              width: 2),
+                            color: Theme.of(context).colorScheme.error,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),

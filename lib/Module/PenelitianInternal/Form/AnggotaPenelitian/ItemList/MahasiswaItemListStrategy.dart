@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemList/ItemListStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Share/ItemListStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 
 class MahasiswaItemListStrategy implements ItemListStrategy<Post> {

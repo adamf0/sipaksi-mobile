@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemList/ItemListStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Share/ItemListStrategy.dart';
 
 class CustomListView<T> extends StatelessWidget {
   final double width;

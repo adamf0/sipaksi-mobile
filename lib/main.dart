@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/ColorExtension.dart';
 import 'package:sipaksi/Module/Login/LoginPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/InternalResearchFormPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/RabPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -81,7 +79,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      home: const InternalResearchFormPage(),
+      home: const RabPage(),
     );
   }
 }

@@ -1,32 +1,34 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sipaksi/Components/DropdownSearch/DropdownItems.dart';
 import 'package:sipaksi/Components/DropdownSearch/DropdownSearch.dart';
+import 'package:sipaksi/Module/ColorExtension.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/RumpunIlmu/NumericalRangeFormatter.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 
-class PrioritasRisetPage extends StatefulWidget {
-  const PrioritasRisetPage({super.key});
+class RumpunIlmuPage extends StatefulWidget {
+  const RumpunIlmuPage({super.key});
 
   @override
-  State<PrioritasRisetPage> createState() => _PrioritasRisetPageState();
+  State<RumpunIlmuPage> createState() => _RumpunIlmuPageState();
 }
 
-class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
-  final ValueNotifier<List<DropdownItems>> badgesPrioritasRiset =
+class _RumpunIlmuPageState extends State<RumpunIlmuPage> {
+  final ValueNotifier<List<DropdownItems>> badgesRumpunIlmu1 =
       ValueNotifier([]);
-  final ValueNotifier<List<DropdownItems>> filteredPrioritasRiset =
-      ValueNotifier([]);
-
-  final ValueNotifier<List<DropdownItems>> badgesBidangFokus =
-      ValueNotifier([]);
-  final ValueNotifier<List<DropdownItems>> filteredBidangFokus =
+  final ValueNotifier<List<DropdownItems>> filteredRumpunIlmu1 =
       ValueNotifier([]);
 
-  final ValueNotifier<List<DropdownItems>> badgesTema = ValueNotifier([]);
-  final ValueNotifier<List<DropdownItems>> filteredTema = ValueNotifier([]);
+  final ValueNotifier<List<DropdownItems>> badgesRumpunIlmu2 =
+      ValueNotifier([]);
+  final ValueNotifier<List<DropdownItems>> filteredRumpunIlmu2 =
+      ValueNotifier([]);
 
-  final ValueNotifier<List<DropdownItems>> badgesTopik = ValueNotifier([]);
-  final ValueNotifier<List<DropdownItems>> filteredTopik = ValueNotifier([]);
+  final ValueNotifier<List<DropdownItems>> badgesRumpunIlmu3 =
+      ValueNotifier([]);
+  final ValueNotifier<List<DropdownItems>> filteredRumpunIlmu3 =
+      ValueNotifier([]);
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
 
@@ -56,7 +58,7 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
-          "Form Penelitian Internal",
+          "Rumpun Ilmu",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -70,7 +72,7 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Prioritas Riset",
+                      "Rumpun Ilmu 1",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
@@ -78,15 +80,15 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
                       ),
                     ),
                     DropdownSearch(
-                      badgesNotifier: badgesPrioritasRiset,
-                      filteredNotifier: filteredPrioritasRiset,
+                      badgesNotifier: badgesRumpunIlmu1,
+                      filteredNotifier: filteredRumpunIlmu1,
                       fetchUsers: (query) async {
-                        await _fetchData(query, filteredPrioritasRiset);
+                        await _fetchData(query, filteredRumpunIlmu1);
                       },
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "Bidang Fokus Penelitian",
+                      "Rumpun Ilmu 2",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
@@ -94,15 +96,15 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
                       ),
                     ),
                     DropdownSearch(
-                      badgesNotifier: badgesBidangFokus,
-                      filteredNotifier: filteredBidangFokus,
+                      badgesNotifier: badgesRumpunIlmu2,
+                      filteredNotifier: filteredRumpunIlmu2,
                       fetchUsers: (query) async {
-                        await _fetchData(query, filteredBidangFokus);
+                        await _fetchData(query, filteredRumpunIlmu2);
                       },
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "Tema",
+                      "Rumpun Ilmu 3",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
@@ -110,27 +112,80 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
                       ),
                     ),
                     DropdownSearch(
-                      badgesNotifier: badgesTema,
-                      filteredNotifier: filteredTema,
+                      badgesNotifier: badgesRumpunIlmu3,
+                      filteredNotifier: filteredRumpunIlmu3,
                       fetchUsers: (query) async {
-                        await _fetchData(query, filteredTema);
+                        await _fetchData(query, filteredRumpunIlmu3);
                       },
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "Topik",
+                      "Lama Kegiatan",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    DropdownSearch(
-                      badgesNotifier: badgesTopik,
-                      filteredNotifier: filteredTopik,
-                      fetchUsers: (query) async {
-                        await _fetchData(query, filteredTopik);
-                      },
+                    TextField(
+                      // controller: widget.controller,
+                      keyboardType: TextInputType.number,
+                      obscureText: false, // Negate the value
+                      onChanged: (value) => {},
+                      textInputAction: TextInputAction.next,
+                      maxLines: 1,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumericalRangeFormatter()
+                      ],
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.outline),
+                        labelStyle:
+                            TextStyle(color: Theme.of(context).primaryColor),
+                        suffixIcon: const Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Bulan"), //ini masih masalah
+                            ],
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.outline,
+                              width: 1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.outline,
+                              width: 1),
+                        ),
+                        // errorBorder: OutlineInputBorder(
+                        //   borderRadius: BorderRadius.circular(8),
+                        //   borderSide:
+                        //       const BorderSide(color: Colors.red, width: 1),
+                        // ),
+                        // focusedErrorBorder: OutlineInputBorder(
+                        //   borderRadius: BorderRadius.circular(8),
+                        //   borderSide:
+                        //       const BorderSide(color: Colors.red, width: 2),
+                        // ),
+                      ),
                     ),
                     const SizedBox(height: 10),
                   ],

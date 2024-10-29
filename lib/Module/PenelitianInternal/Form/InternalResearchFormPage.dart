@@ -4,11 +4,14 @@ import 'package:sipaksi/Components/VerticalTimeline/ItemsTimeline.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiNonDosenPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunUsulanPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunPenelitian/JudulTahunUsulanPage.dart';
 import 'package:sipaksi/Components/VerticalTimeline/Timeline.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/PrioritasRisetPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/RumpunIlmuPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitianPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranTambahanPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranWajibPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/PrioritasRiset/PrioritasRisetPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/RabPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/RumpunIlmu/RumpunIlmuPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitian/SkemaPenelitianPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Status.dart';
 import 'dart:math' as math;
 
@@ -195,7 +198,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus menyetor data luaran capaian dan ini sifatnya wajib",
             required: true,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LuaranWajibPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
           ItemsTimeline(
@@ -204,7 +214,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus menyetor data luaran capaian tambahan dan ini sifatnya opsional. anda melengkapi ini akan medapatkan point lebih selama review lpmp dan reviewer.",
             required: false,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LuaranTambahanPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
         ],
@@ -218,7 +235,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus memberitahu kami rab secara menyeluruh dan lengkap",
             required: true,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RabPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
         ],

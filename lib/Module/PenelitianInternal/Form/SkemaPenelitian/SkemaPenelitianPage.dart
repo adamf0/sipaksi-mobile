@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/RadioModel.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitian/RadioModel.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -95,7 +95,7 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
-          "Form Penelitian Internal",
+          "Skema Penelitian",
           style: TextStyle(color: Colors.white),
         ),
       ),

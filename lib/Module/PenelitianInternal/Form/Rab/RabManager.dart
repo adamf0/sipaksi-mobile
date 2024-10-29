@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FilterStrategy.dart';
 
-class AnggotaPenelitianManager<T> {
+class RabManager<T> {
   late Future<List<T>> dataFuture;
   List<T> allData = [];
   ValueNotifier<List<T>> filteredData = ValueNotifier<List<T>>([]);
@@ -11,7 +11,7 @@ class AnggotaPenelitianManager<T> {
   final FetchStrategy<T> fetchStrategy;
   final FilterStrategy<T> filterStrategy;
 
-  AnggotaPenelitianManager(this.fetchStrategy, this.filterStrategy) {
+  RabManager(this.fetchStrategy, this.filterStrategy) {
     dataFuture = fetchData();
   }
 
