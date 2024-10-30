@@ -6,11 +6,13 @@ class FooterAction extends StatelessWidget {
     required this.onPress,
     required this.optionalBuilder,
     required this.isLoading,
+    this.buttonHide = false,
   }) : super(key: key);
 
   final Function(double height) onPress;
   final Widget Function(double height) optionalBuilder;
   final ValueNotifier<bool> isLoading;
+  final bool buttonHide;
 
   double getWrapHeight(BuildContext context) {
     final renderBox = context.findRenderObject() as RenderBox?;
@@ -35,18 +37,20 @@ class FooterAction extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: CircularProgressIndicator(),
                     )
-                  : TextButton(
-                      onPressed: () {
-                        onPress(getWrapHeight(context));
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.black,
-                      ),
-                      child: const Text(
-                        'Simpan',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    );
+                  : (!buttonHide
+                      ? TextButton(
+                          onPressed: () {
+                            onPress(getWrapHeight(context));
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.black,
+                          ),
+                          child: const Text(
+                            'Simpan',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        )
+                      : Container());
             },
           ),
         ],

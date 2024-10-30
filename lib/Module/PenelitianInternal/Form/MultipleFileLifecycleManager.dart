@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FileLifecycleManager with WidgetsBindingObserver {
+class MultipleFileLifecycleManager with WidgetsBindingObserver {
   List<PlatformFile> selectedFiles = [];
 
   void init() {

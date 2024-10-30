@@ -16,25 +16,19 @@ class MahasiswaItemListStrategy implements ItemListStrategy<Post> {
 
     return ListTile(
       title: Text(
-        data.title ?? "-", //nama
-        style: TextStyle(
-          color: color,
-        ),
+        data.title ?? "-",
+        style: TextStyle(color: color),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "065117251",
-            style: TextStyle(
-              color: color,
-            ),
+            "065117251", // You might want to make this dynamic
+            style: TextStyle(color: color),
           ),
           Text(
-            "ilmu komputer",
-            style: TextStyle(
-              color: color,
-            ),
+            "Ilmu Komputer", // You might want to make this dynamic
+            style: TextStyle(color: color),
           ),
         ],
       ),
@@ -42,7 +36,9 @@ class MahasiswaItemListStrategy implements ItemListStrategy<Post> {
         value: isSelected,
         activeColor: Theme.of(context).colorScheme.tertiary,
         onChanged: (bool? value) {
-          onSelectedChanged(data);
+          if (value != null) {
+            onSelectedChanged(data);
+          }
         },
       ),
     );

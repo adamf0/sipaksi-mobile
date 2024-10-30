@@ -29,7 +29,7 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
       ).get("/albums/1/photos");
 
       final List body = response.data;
-      return body.map((e) => Post().fromJson(e)).toList();
+      return body.map((e) => Post.fromJson(e)).toList();
     } on DioException catch (e) {
       print("SkemaPenelitianPage [getPosts](DioError): ${e.message}");
       rethrow;

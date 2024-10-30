@@ -2,11 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/VerticalTimeline/ItemsTimeline.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaMbkmPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiNonDosenPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenKontrak/DokumenKontrakPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunPenelitian/JudulTahunUsulanPage.dart';
 import 'package:sipaksi/Components/VerticalTimeline/Timeline.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranTambahanPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranUploadPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranWajibPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/PrioritasRiset/PrioritasRisetPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/RabPage.dart';
@@ -154,7 +157,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          const AnggotaPenelitiMahasiswaPage(),
+                          const AnggotaPenelitiMahasiswaMbkmPage(),
                     ),
                   );
                 },
@@ -189,7 +192,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus unggah berkas proposal penelitian sesuai template yang telah disediakan",
             required: true,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LuaranUploadPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
           ItemsTimeline(
@@ -262,7 +272,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Dookumen Kontrak",
+        title: "Dokumen Kontrak",
         subItems: [
           ItemsTimeline(
             title: "Unggah Dokumen Kontrak",
@@ -270,7 +280,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus unggah berkas dokumen kontrak dan ini sifatnya wajib",
             required: true,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DokumenKontrakPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
         ],

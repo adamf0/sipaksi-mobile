@@ -32,7 +32,7 @@ class _InternalResearchCatalogPageState
       ).get("/albums/1/photos");
 
       final List body = response.data;
-      return body.map((e) => Post().fromJson(e)).toList();
+      return body.map((e) => Post.fromJson(e)).toList();
     } on DioError catch (e) {
       print("InternalResearchCatalogPage [getPosts](DioError): ${e.message}");
       rethrow;

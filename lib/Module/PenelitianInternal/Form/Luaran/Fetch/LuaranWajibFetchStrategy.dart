@@ -18,7 +18,7 @@ class LuaranWajibFetchStrategy implements FetchStrategy<Post> {
     try {
       final response = await _dio.get("/albums/1/photos");
       final List body = response.data;
-      return body.map((e) => Post().fromJson(e)).toList();
+      return body.map((e) => Post.fromJson(e)).toList();
     } on DioException catch (e) {
       print("Error fetching posts: ${e.message}");
       rethrow;

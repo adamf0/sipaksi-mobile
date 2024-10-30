@@ -2,15 +2,20 @@ import 'package:sipaksi/Module/Abstraction/JsonSerializable.dart';
 
 class Post implements JsonSerializable {
   int? albumId;
-  int? id;
+  int id;
   String? title;
   String? url;
   String? thumbnailUrl;
 
-  Post({this.albumId, this.id, this.title, this.url, this.thumbnailUrl});
+  Post({
+    this.albumId,
+    required this.id,
+    this.title,
+    this.url,
+    this.thumbnailUrl,
+  });
 
-  @override
-  Post fromJson(Map<String, dynamic> json) {
+  static Post fromJson(Map<String, dynamic> json) {
     return Post(
       albumId: json['albumId'],
       id: json['id'],

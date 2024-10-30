@@ -9,9 +9,11 @@ class CustomListView<T> extends StatelessWidget {
   final double height;
   final Future<List<T>> source;
   final ValueNotifier<List<T>> filteredData;
-  final Function(T) onSelectedChanged;
-  final List<T?> selectedItems;
-  final ItemListStrategy<T> itemListStrategy;
+  final Function(T)? onSelectedChanged;
+  final Function(T, dynamic)? onChange;
+  final List<T?>? selectedItems;
+  final ItemListStrategy<T>? itemListStrategy;
+  final Function(BuildContext ctx, T, int)? render;
 
   const CustomListView({
     Key? key,
@@ -19,9 +21,11 @@ class CustomListView<T> extends StatelessWidget {
     required this.height,
     required this.source,
     required this.filteredData,
-    required this.onSelectedChanged,
-    required this.selectedItems,
-    required this.itemListStrategy,
+    this.onChange,
+    this.onSelectedChanged,
+    this.selectedItems,
+    this.itemListStrategy,
+    this.render,
   }) : super(key: key);
 
   @override
@@ -49,13 +53,18 @@ class CustomListView<T> extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final item = filteredItems[index];
-                  final isSelected = selectedItems.contains(item);
-                  return itemListStrategy.buildTile(
-                    context,
-                    item,
-                    isSelected,
-                    onSelectedChanged,
-                  );
+                  final isSelected = (selectedItems ?? []).contains(item);
+
+                  if (render != null) {
+                    return render!(context, item, index);
+                  } else {
+                    return itemListStrategy!.buildTile(
+                      context,
+                      item,
+                      isSelected,
+                      onSelectedChanged!,
+                    );
+                  }
                 },
               );
             },

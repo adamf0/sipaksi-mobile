@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/ColorExtension.dart';
 import 'package:sipaksi/Module/Login/LoginPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/FileUploadExample.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/RabPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenKontrak/DokumenKontrakPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/InternalResearchFormPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      home: FileUploadExample(),
+      home: InternalResearchFormPage(),
     );
   }
 }

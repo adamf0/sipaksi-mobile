@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/FileLifecycleManager.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/MultipleFileLifecycleManager.dart';
 
-class FileUploadExample extends StatefulWidget {
+class MultipleFileUploadExample extends StatefulWidget {
   @override
-  _FileUploadExampleState createState() => _FileUploadExampleState();
+  _MultipleFileUploadExampleState createState() =>
+      _MultipleFileUploadExampleState();
 }
 
-class _FileUploadExampleState extends State<FileUploadExample>
+class _MultipleFileUploadExampleState extends State<MultipleFileUploadExample>
     with WidgetsBindingObserver {
-  final FileLifecycleManager _fileLifecycleManager = FileLifecycleManager();
+  final MultipleFileLifecycleManager _fileLifecycleManager =
+      MultipleFileLifecycleManager();
   List<double> _uploadProgresses = [];
   List<bool> _uploadingStates = [];
 
