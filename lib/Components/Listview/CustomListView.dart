@@ -7,13 +7,13 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/Share/ItemListStrategy.da
 class CustomListView<T> extends StatelessWidget {
   final double width;
   final double height;
-  final Future<List<T>> source;
-  final ValueNotifier<List<T>> filteredData;
-  final Function(T)? onSelectedChanged;
-  final Function(T, dynamic)? onChange;
-  final List<T?>? selectedItems;
+  final Future<List<T>> source; 
+  final ValueNotifier<List<T>> filteredData; //ini bisa saja dihilangkan yg berarati ListView.builder() harus child sendiri
+  final Function(T)? onSelectedChanged; //hapus, salah penerapan
+  final Function(T, dynamic)? onChange; //hapus, salah penerapan
+  final List<T?>? selectedItems; //ini bisa hilang jika filteredData hilang
   final ItemListStrategy<T>? itemListStrategy;
-  final Function(BuildContext ctx, T, int)? render;
+  final Function(BuildContext ctx, T, int)? render; //ini harusnya itemListStrategy sudah bisa handle, sempat terpikirkan bagaimana transfer variable tapi terhalang oleh class implementasi
 
   const CustomListView({
     Key? key,
