@@ -94,9 +94,12 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Skema Penelitian",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Skema Penelitian",
+          child: Text(
+            "Skema Penelitian",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

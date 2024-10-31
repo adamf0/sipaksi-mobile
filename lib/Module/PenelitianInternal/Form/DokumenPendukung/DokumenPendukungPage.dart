@@ -7,23 +7,23 @@ import 'package:sipaksi/Components/UploadFile/BoxSelectFile.dart';
 import 'package:sipaksi/Components/UploadFile/FileSelectedUpload.dart';
 import 'package:sipaksi/Module/Helpers/Utility.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitianManager.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Fetch/LuaranTambahanFetchStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Filter/LuaranFilterStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/ItemList/LuaranStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/Fetch/DokumenTambahanFetchStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/Filter/DokumenTambahanFilterStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/ItemList/DokumenTambahanStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SingleFileLifecycleManager.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 
-class DokumenKontrakPage extends StatefulWidget {
-  const DokumenKontrakPage({super.key});
+class DokumenPendukungPage extends StatefulWidget {
+  const DokumenPendukungPage({super.key});
 
   @override
-  State<DokumenKontrakPage> createState() => _DokumenKontrakPageState();
+  State<DokumenPendukungPage> createState() => _DokumenPendukungPageState();
 }
 
-class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
+class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
   late AnggotaPenelitianManager<Post> anggotaPenelitianManager;
   final SingleFileLifecycleManager fileLifecycleManager =
       SingleFileLifecycleManager();
@@ -38,8 +38,8 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
     fileLifecycleManager.loadSavedFile(); // Load saved file if available
 
     anggotaPenelitianManager = AnggotaPenelitianManager<Post>(
-      LuaranTambahanFetchStrategy(),
-      LuaranFilterStrategy(),
+      DokumenTambahanFetchStrategy(),
+      DokumenTambahanFilterStrategy(),
     );
   }
 
@@ -67,9 +67,9 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Hero(
-          tag: "Unggah Dokumen Kontrak",
-          child: Text("Unggah Dokumen Kontrak",
-              style: TextStyle(color: Colors.white)),
+          tag: "Dokumen Pendukung",
+          child:
+              Text("Dokumen Pendukung", style: TextStyle(color: Colors.white)),
         ),
       ),
       body: Column(
@@ -133,7 +133,7 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                             listToJson(anggotaPenelitianManager.selectedItems));
                       },
                       selectedItems: anggotaPenelitianManager.selectedItems,
-                      itemListStrategy: LuaranStrategy(),
+                      itemListStrategy: DokumenTambahanStrategy(),
                     )
                   ],
                 ),
@@ -190,6 +190,9 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
   }
 
   Future<void> _showBottomSheet(BuildContext context) async {
+    String kategori = "";
+    String link = "";
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -213,6 +216,139 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text(
+                              "Kategori",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            TextField(
+                              keyboardType: TextInputType.text,
+                              obscureText: false,
+                              onChanged: (value) {
+                                setState(() {
+                                  kategori = value;
+                                });
+                                setSheetState(() {});
+                              },
+                              textInputAction: TextInputAction.next,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.outline),
+                              decoration: InputDecoration(
+                                errorText:
+                                    kategori.isEmpty ? "belum diisi" : null,
+                                hintStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 2),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.error,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.error,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "Link",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            TextField(
+                              keyboardType: TextInputType.url,
+                              obscureText: false,
+                              onChanged: (value) {
+                                setState(() {
+                                  link = value;
+                                });
+                                setSheetState(() {});
+                              },
+                              textInputAction: TextInputAction.next,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.outline),
+                              decoration: InputDecoration(
+                                errorText: link.isEmpty ? "belum diisi" : null,
+                                hintStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor,
+                                      width: 2),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.error,
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.error,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -226,15 +362,20 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    fileLifecycleManager.selectedFile == null
+                                    link.isEmpty &&
+                                            fileLifecycleManager.selectedFile ==
+                                                null
                                         ? "tidak boleh kosong"
-                                        : "",
+                                        : (link.isNotEmpty
+                                            ? "file tidak akan dikirim"
+                                            : ""),
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w300,
-                                      color:
-                                          Theme.of(context).colorScheme.error,
+                                      color: link.isNotEmpty
+                                          ? Colors.orange
+                                          : Theme.of(context).colorScheme.error,
                                     ),
                                   ),
                                 ),
@@ -249,8 +390,8 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                             if (fileLifecycleManager.selectedFile != null)
                               FileSelectedUpload(
                                 file: fileLifecycleManager.selectedFile!,
-                                progress: uploadProgress,
-                                isUploading: isUpload,
+                                progress: uploadProgress, //tidak terupdate
+                                isUploading: isUpload, //tidak terupdate
                                 onDelete: () {
                                   setState(() {
                                     isUpload = false;
@@ -270,16 +411,31 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                                       isUpload = true;
                                     });
                                     setSheetState(() {});
-
                                     try {
                                       Dio dio = Dio();
-                                      FormData formData = FormData.fromMap({
-                                        'file': await MultipartFile.fromFile(
-                                            fileLifecycleManager
-                                                .selectedFile!.path!,
-                                            filename: fileLifecycleManager
-                                                .selectedFile!.name),
-                                      });
+                                      FormData formData = FormData.fromMap({});
+
+                                      MapEntry('kategori', kategori);
+                                      if (link.isNotEmpty) {
+                                        formData.fields.add(
+                                          MapEntry('link', link),
+                                        );
+                                      } else if (fileLifecycleManager
+                                              .selectedFile !=
+                                          null) {
+                                        formData.files.add(
+                                          MapEntry(
+                                            'file',
+                                            await MultipartFile.fromFile(
+                                              fileLifecycleManager
+                                                  .selectedFile!.path!,
+                                              filename: fileLifecycleManager
+                                                  .selectedFile!.name,
+                                            ),
+                                          ),
+                                        );
+                                      }
+
                                       await dio.post(
                                           'https://your-api-endpoint.com/upload',
                                           data: formData,
@@ -305,6 +461,8 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                                         uploadProgress = 0.0;
                                         fileLifecycleManager.selectedFile =
                                             null;
+                                        kategori = "";
+                                        link = "";
                                       });
                                       setSheetState(() {});
                                     }

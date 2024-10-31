@@ -55,9 +55,12 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Prioritas Riset",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Prioritas Riset",
+          child: Text(
+            "Prioritas Riset",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

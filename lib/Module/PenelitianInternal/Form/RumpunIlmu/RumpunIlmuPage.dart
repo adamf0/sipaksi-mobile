@@ -57,9 +57,12 @@ class _RumpunIlmuPageState extends State<RumpunIlmuPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Rumpun Ilmu",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Rumpun Ilmu & Lama Kegiatan",
+          child: Text(
+            "Rumpun Ilmu & Lama Kegiatan",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

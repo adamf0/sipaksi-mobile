@@ -47,9 +47,12 @@ class _AnggotaPenelitiMahasiswaPageState
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Anggota Penelitian (Mahasiswa)",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Data Mahasiswa",
+          child: Text(
+            "Data Mahasiswa",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

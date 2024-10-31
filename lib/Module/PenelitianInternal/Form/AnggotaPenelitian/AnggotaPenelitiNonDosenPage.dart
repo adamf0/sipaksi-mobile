@@ -57,9 +57,12 @@ class _AnggotaPenelitiNonDosenPageState
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Anggota Penelitian (Non Dosen / Dosen Luar)",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Anggota Peneliti (Non Dosen)",
+          child: Text(
+            "Anggota Peneliti (Non Dosen)",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

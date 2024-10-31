@@ -6,10 +6,11 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Anggota
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiNonDosenPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenKontrak/DokumenKontrakPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/DokumenPendukungPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunPenelitian/JudulTahunUsulanPage.dart';
 import 'package:sipaksi/Components/VerticalTimeline/Timeline.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranTambahanPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranUploadPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/SubstansiPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/LuaranWajibPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/PrioritasRiset/PrioritasRisetPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/RabPage.dart';
@@ -196,14 +197,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LuaranUploadPage(),
+                  builder: (context) => const SubstansiPage(),
                 ),
               );
             },
             subItems: [],
           ),
           ItemsTimeline(
-            title: "Luaran Capaian",
+            title: "Luaran Capaian Wajib",
             description:
                 "pada tahap ini anda harus menyetor data luaran capaian dan ini sifatnya wajib",
             required: true,
@@ -266,7 +267,14 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 "pada tahap ini anda harus unggah berkas dokumen pendukung dan ini sifatnya opsional",
             required: false,
             isDone: true,
-            action: () {},
+            action: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DokumenPendukungPage(),
+                ),
+              );
+            },
             subItems: [],
           ),
         ],
@@ -367,9 +375,12 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Form Penelitian Internal",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Penelitian Internal",
+          child: Text(
+            "Penelitian Internal",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -577,83 +588,86 @@ class Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: title,
-                        style: TextStyle(
-                          fontSize: 14,
-                          decoration:
-                              isDone ? TextDecoration.lineThrough : null,
-                          fontWeight: FontWeight.w300,
-                          color: isDone
-                              ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context).colorScheme.tertiary,
-                        ),
-                      ),
-                      TextSpan(
-                        text: required ? " *" : "",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (subtitle == null && subRender == null)
-                Transform.rotate(
-                  angle: 180 * math.pi / 180,
-                  child: IconButton(
-                    iconSize: 14,
-                    onPressed: onBackPressed,
-                    icon: Icon(
-                      Icons.arrow_back_ios_outlined,
-                      color: isDone
-                          ? Theme.of(context).colorScheme.tertiary
-                          : Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          if (subtitle != null)
+    return Hero(
+      tag: title,
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
               children: [
                 Expanded(
-                  child: Text(
-                    subtitle ?? "",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      color: isDone
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.tertiary,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: title,
+                          style: TextStyle(
+                            fontSize: 14,
+                            decoration:
+                                isDone ? TextDecoration.lineThrough : null,
+                            fontWeight: FontWeight.w300,
+                            color: isDone
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).colorScheme.tertiary,
+                          ),
+                        ),
+                        TextSpan(
+                          text: required ? " *" : "",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                Transform.rotate(
-                  angle: 180 * math.pi / 180,
-                  child: IconButton(
-                    iconSize: 14,
-                    onPressed: onBackPressed,
-                    icon: const Icon(Icons.arrow_back_ios_outlined),
+                if (subtitle == null && subRender == null)
+                  Transform.rotate(
+                    angle: 180 * math.pi / 180,
+                    child: IconButton(
+                      iconSize: 14,
+                      onPressed: onBackPressed,
+                      icon: Icon(
+                        Icons.arrow_back_ios_outlined,
+                        color: isDone
+                            ? Theme.of(context).colorScheme.tertiary
+                            : Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
                   ),
-                ),
               ],
             ),
-          if (subRender != null) Flexible(child: subRender!),
-        ],
+            if (subtitle != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      subtitle ?? "",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                        color: isDone
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                  ),
+                  Transform.rotate(
+                    angle: 180 * math.pi / 180,
+                    child: IconButton(
+                      iconSize: 14,
+                      onPressed: onBackPressed,
+                      icon: const Icon(Icons.arrow_back_ios_outlined),
+                    ),
+                  ),
+                ],
+              ),
+            if (subRender != null) Flexible(child: subRender!),
+          ],
+        ),
       ),
     );
   }

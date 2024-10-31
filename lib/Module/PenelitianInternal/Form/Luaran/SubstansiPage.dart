@@ -8,14 +8,14 @@ import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 
-class LuaranUploadPage extends StatefulWidget {
-  const LuaranUploadPage({super.key});
+class SubstansiPage extends StatefulWidget {
+  const SubstansiPage({super.key});
 
   @override
-  State<LuaranUploadPage> createState() => _LuaranUploadPageState();
+  State<SubstansiPage> createState() => _SubstansiPageState();
 }
 
-class _LuaranUploadPageState extends State<LuaranUploadPage> {
+class _SubstansiPageState extends State<SubstansiPage> {
   late AnggotaPenelitianManager<Post> anggotaPenelitianManager;
   final SingleFileLifecycleManager fileLifecycleManager =
       SingleFileLifecycleManager();
@@ -88,8 +88,11 @@ class _LuaranUploadPageState extends State<LuaranUploadPage> {
           onPressed: () => !isLoading ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text("Unggah Proposal Penelitian",
-            style: TextStyle(color: Colors.white)),
+        title: const Hero(
+          tag: "Unggah Proposal Penelitian",
+          child: Text("Unggah Proposal Penelitian",
+              style: TextStyle(color: Colors.white)),
+        ),
       ),
       body: Column(
         children: [

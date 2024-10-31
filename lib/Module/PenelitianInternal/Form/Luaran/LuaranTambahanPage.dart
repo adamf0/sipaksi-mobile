@@ -51,9 +51,12 @@ class _LuaranTambahanPageState extends State<LuaranTambahanPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Luaran Tambahan",
-          style: TextStyle(color: Colors.white),
+        title: Hero(
+          tag: "Luaran Capaian Tambahan",
+          child: Text(
+            "Luaran Capaian Tambahan",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

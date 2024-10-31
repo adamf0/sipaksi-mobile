@@ -56,9 +56,12 @@ class _AnggotaPenelitiMahasiswaMbkmPageState
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Anggota Penelitian (Mahasiswa)",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Data MBKM",
+          child: Text(
+            "Data MBKM",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

@@ -46,9 +46,12 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Anggota Penelitian (Dosen)",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Anggota Peneliti (Dosen)",
+          child: Text(
+            "Anggota Peneliti (Dosen)",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

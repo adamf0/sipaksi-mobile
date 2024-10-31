@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/Dashboard/TypeSubmission.dart';
@@ -412,26 +410,29 @@ class Menus extends StatelessWidget {
             items: listMenus.map((item) {
               return Builder(
                 builder: (BuildContext context) {
-                  return SizedBox(
-                    width: width,
-                    child: Card(
-                      child: InkWell(
-                        onTap: () => {onTap(item)},
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Image.asset(
-                                  item.img_assset,
-                                  fit: BoxFit.contain,
+                  return Hero(
+                    tag: item.judul,
+                    child: SizedBox(
+                      width: width,
+                      child: Card(
+                        child: InkWell(
+                          onTap: () => {onTap(item)},
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Image.asset(
+                                    item.img_assset,
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Text(item.judul),
-                            const SizedBox(height: 10)
-                          ],
+                              Text(item.judul),
+                              const SizedBox(height: 10)
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -51,9 +51,12 @@ class _RabPageState extends State<RabPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Rab",
-          style: TextStyle(color: Colors.white),
+        title: Hero(
+          tag: "Data RAB",
+          child: Text(
+            "Data RAB",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

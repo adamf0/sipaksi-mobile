@@ -43,9 +43,12 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Judul & Tahun Penelitian",
-          style: TextStyle(color: Colors.white),
+        title: const Hero(
+          tag: "Judul & Tahun Penelitian",
+          child: Text(
+            "Judul & Tahun Penelitian",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(

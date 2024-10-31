@@ -51,9 +51,12 @@ class _LuaranWajibPageState extends State<LuaranWajibPage> {
               !isLoading.value ? Navigator.of(context).pop() : null,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Luaran Wajib",
-          style: TextStyle(color: Colors.white),
+        title: Hero(
+          tag: "Luaran Capaian Wajib",
+          child: Text(
+            "Luaran Capaian Wajib",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: Column(
