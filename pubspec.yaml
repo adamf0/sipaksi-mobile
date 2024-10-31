@@ -46,6 +46,7 @@ dependencies:
   file_picker: ^5.0.1
   permission_handler: ^10.2.0
   shared_preferences: ^2.0.6
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
     - lib/assets/images/error.png
     - lib/assets/images/lengkapi.png
     - lib/assets/images/no_data.png
+    - lib/assets/images/ilustrasi1.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

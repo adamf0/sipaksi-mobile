@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sipaksi/Module/ColorExtension.dart';
+import 'package:sipaksi/Module/Dashboard/DashboardPage.dart';
 import 'package:sipaksi/Module/Login/LoginPage.dart';
 
-void main() {
+Future<void> main() async {
+  await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
 }
 
@@ -78,7 +81,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: SafeArea(child: LoginPage()),
     );
   }
 }
