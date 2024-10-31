@@ -8,7 +8,7 @@ class NonDosenItemListStrategy implements ItemListStrategy<Post> {
     BuildContext context,
     Post data,
     bool isSelected,
-    Function(Post) onSelectedChanged,
+    Function(Post) onSelectedChanged, //pindah ke contructor
   ) {
     Color color = isSelected
         ? Theme.of(context).colorScheme.tertiary

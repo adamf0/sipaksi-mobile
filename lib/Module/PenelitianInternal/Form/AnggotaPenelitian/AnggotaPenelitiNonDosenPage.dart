@@ -111,9 +111,9 @@ class _AnggotaPenelitiNonDosenPageState
                     CustomListView<Post>(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      source: anggotaPenelitianManager.dataFuture,
-                      filteredData: anggotaPenelitianManager.filteredData,
-                      onSelectedChanged: (post) {
+                      source: anggotaPenelitianManager.dataFuture, //wajib dari interface
+                      filteredData: anggotaPenelitianManager.filteredData, //wajib dari interface
+                      onSelectedChanged: (post) { //harus di refactor lagi
                         setState(() {
                           if (anggotaPenelitianManager.selectedItems
                               .contains(post)) {
@@ -126,7 +126,7 @@ class _AnggotaPenelitiNonDosenPageState
                             listToJson(anggotaPenelitianManager.selectedItems));
                       },
                       selectedItems: anggotaPenelitianManager.selectedItems,
-                      itemListStrategy: NonDosenItemListStrategy(),
+                      itemListStrategy: NonDosenItemListStrategy(), //onSelectedChanged harusnya ada disini agar tidak terjadi coupling dan kaya opsional function/interface di bagian render item
                     )
                   ],
                 ),
