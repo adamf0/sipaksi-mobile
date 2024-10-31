@@ -588,15 +588,15 @@ class Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: title,
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Hero(
+                  tag: title,
                   child: Text.rich(
                     TextSpan(
                       children: [
@@ -624,50 +624,50 @@ class Section extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (subtitle == null && subRender == null)
-                  Transform.rotate(
-                    angle: 180 * math.pi / 180,
-                    child: IconButton(
-                      iconSize: 14,
-                      onPressed: onBackPressed,
-                      icon: Icon(
-                        Icons.arrow_back_ios_outlined,
-                        color: isDone
-                            ? Theme.of(context).colorScheme.tertiary
-                            : Theme.of(context).colorScheme.secondary,
-                      ),
+              ),
+              if (subtitle == null && subRender == null)
+                Transform.rotate(
+                  angle: 180 * math.pi / 180,
+                  child: IconButton(
+                    iconSize: 14,
+                    onPressed: onBackPressed,
+                    icon: Icon(
+                      Icons.arrow_back_ios_outlined,
+                      color: isDone
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.secondary,
                     ),
                   ),
+                ),
+            ],
+          ),
+          if (subtitle != null)
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    subtitle ?? "",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: isDone
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+                Transform.rotate(
+                  angle: 180 * math.pi / 180,
+                  child: IconButton(
+                    iconSize: 14,
+                    onPressed: onBackPressed,
+                    icon: const Icon(Icons.arrow_back_ios_outlined),
+                  ),
+                ),
               ],
             ),
-            if (subtitle != null)
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      subtitle ?? "",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        color: isDone
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
-                  ),
-                  Transform.rotate(
-                    angle: 180 * math.pi / 180,
-                    child: IconButton(
-                      iconSize: 14,
-                      onPressed: onBackPressed,
-                      icon: const Icon(Icons.arrow_back_ios_outlined),
-                    ),
-                  ),
-                ],
-              ),
-            if (subRender != null) Flexible(child: subRender!),
-          ],
-        ),
+          if (subRender != null) Flexible(child: subRender!),
+        ],
       ),
     );
   }

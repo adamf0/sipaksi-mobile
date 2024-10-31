@@ -111,9 +111,12 @@ class _AnggotaPenelitiNonDosenPageState
                     CustomListView<Post>(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      source: anggotaPenelitianManager.dataFuture, //wajib dari interface
-                      filteredData: anggotaPenelitianManager.filteredData, //wajib dari interface
-                      onSelectedChanged: (post) { //harus di refactor lagi
+                      source: anggotaPenelitianManager
+                          .dataFuture, //wajib dari interface
+                      filteredData: anggotaPenelitianManager
+                          .filteredData, //wajib dari interface
+                      onSelectedChanged: (post) {
+                        //harus di refactor lagi
                         setState(() {
                           if (anggotaPenelitianManager.selectedItems
                               .contains(post)) {
@@ -126,7 +129,8 @@ class _AnggotaPenelitiNonDosenPageState
                             listToJson(anggotaPenelitianManager.selectedItems));
                       },
                       selectedItems: anggotaPenelitianManager.selectedItems,
-                      itemListStrategy: NonDosenItemListStrategy(), //onSelectedChanged harusnya ada disini agar tidak terjadi coupling dan kaya opsional function/interface di bagian render item
+                      itemListStrategy:
+                          NonDosenItemListStrategy(), //onSelectedChanged harusnya ada disini agar tidak terjadi coupling dan kaya opsional function/interface di bagian render item
                     )
                   ],
                 ),
@@ -216,7 +220,7 @@ class _AnggotaPenelitiNonDosenPageState
       isDismissible: false,
       builder: (contextSheet) {
         return FractionallySizedBox(
-          heightFactor: 0.8,
+          heightFactor: 1.0,
           widthFactor: 1.0,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
