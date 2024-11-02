@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
+import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
 import 'package:sipaksi/Components/VerticalTimeline/ItemsTimeline.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaMbkmPage.dart';
@@ -21,6 +23,7 @@ import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
 import 'dart:math' as math;
 
 import 'package:sipaksi/Module/Shared/Module.dart';
+import 'package:sipaksi/Module/Shared/constant.dart';
 
 class InternalResearchFormPage extends StatefulWidget {
   const InternalResearchFormPage({super.key});
@@ -294,6 +297,94 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
       ),
     ];
 
+    Status status = Status.parse("tolak_pendanaan");
+    Module current = Module.penelitian_internal;
+
+    return Scaffold(
+        appBar: AppBar(
+          leading: LayoutBuilder(
+            builder: (context, constraints) {
+              return constraints.maxWidth >= 768
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    );
+            },
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Hero(
+            tag: Module.penelitian_internal.value,
+            child: Text(
+              Module.penelitian_internal.value,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth >= 768) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Sidebar.createSidebar(
+                      context: context,
+                      height: height,
+                      list: ListItemsSidebar(current),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: SingleChildScrollView(
+                      child: Content(
+                        width: width,
+                        height: height,
+                        status: status,
+                        list: list,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Content(
+                    width: width,
+                    height: height,
+                    status: status,
+                    list: list,
+                  ),
+                ),
+              );
+            }
+          },
+        ));
+  }
+}
+
+class Content extends StatelessWidget {
+  const Content({
+    super.key,
+    required this.height,
+    required this.width,
+    required this.status,
+    required this.list,
+  });
+
+  final double height, width;
+  final Status status;
+  final List<ItemsTimeline> list;
+
+  @override
+  Widget build(BuildContext context) {
     List<Widget?> getWidgets(String type, List<ItemsTimeline> items, int node) {
       List<Widget?> children = [];
 
@@ -355,50 +446,61 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
       return children;
     }
 
-    Status status = Status.parse("tolak_pendanaan");
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Hero(
-          tag: Module.penelitian_internal.value,
-          child: Text(
-            Module.penelitian_internal.value,
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              StatusWithHistoryComponent(status: status),
-              const SizedBox(height: 5),
-              Divider(
-                color: Theme.of(context).colorScheme.surfaceDim,
-                thickness: 0,
-                height: 2,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        List<Widget> x = [];
+        if (constraints.maxWidth >= 768) {
+          x.add(
+            StepBreadCrumb.createBreadCrumb(context: context, list: [
+              ItemStepCreadCrumb(
+                icon: Icons.home,
+                onTap: () => Navigator.of(context)
+                  ..pop()
+                  ..pop(),
               ),
-              const SizedBox(height: 15),
-              const HeaderComponent(),
-              const SizedBox(height: 10),
-              Timeline(
-                hideIndicator: [8],
-                indicators: getWidgets("indicator", list, 0),
-                children: getWidgets("child", list, 0),
-              )
-            ],
+              ItemStepCreadCrumb(
+                title: Module.penelitian_internal.value,
+                onTap: () => Navigator.of(context).pop(),
+              ),
+              ItemStepCreadCrumb(
+                title: "Form Pengajuan",
+                onTap: () => {},
+              ),
+            ]),
+          );
+        }
+
+        x.addAll([
+          const SizedBox(height: 10),
+          StatusWithHistoryComponent(status: status),
+          const SizedBox(height: 5),
+          Divider(
+            color: Theme.of(context).colorScheme.surfaceDim,
+            thickness: 0,
+            height: 2,
           ),
-        ),
-      ),
+          const SizedBox(height: 15),
+          const HeaderComponent(),
+          const SizedBox(height: 10),
+          Timeline(
+            hideIndicator: [8],
+            indicators: getWidgets("indicator", list, 0),
+            children: getWidgets("child", list, 0),
+          )
+        ]);
+
+        return Container(
+          margin: EdgeInsets.only(
+            left: width * .01,
+            right: width * .01,
+            top: 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: x.toList(),
+          ),
+        );
+      },
     );
   }
 }

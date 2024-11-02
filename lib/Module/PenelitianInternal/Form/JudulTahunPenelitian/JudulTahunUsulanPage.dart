@@ -3,21 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
 import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunPenelitian/Provider/LoadingSaveJudulTahunUsulanState.dart';
+import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:sipaksi/Module/Shared/constant.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-class LoadingState with ChangeNotifier {
-  ValueNotifier<bool> _isLoading = ValueNotifier(false);
-
-  ValueNotifier<bool> get isLoading => _isLoading;
-
-  void setLoading(bool loading) {
-    _isLoading.value = loading;
-    notifyListeners();
-  }
-}
 
 class JudulTahunUsulanPage extends StatefulWidget {
   const JudulTahunUsulanPage({super.key});
@@ -38,12 +29,13 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
     Module current = Module.penelitian_internal;
 
     return ChangeNotifierProvider(
-      create: (context) => LoadingState(),
+      create: (context) => LoadingSaveJudulTahunUsulanState(),
       child: Scaffold(
         appBar: AppBar(
           leading: LayoutBuilder(
             builder: (context, constraints) {
-              final loadingState = Provider.of<LoadingState>(context);
+              final loadingState =
+                  Provider.of<LoadingSaveJudulTahunUsulanState>(context);
 
               return constraints.maxWidth >= 768
                   ? SizedBox.shrink()
@@ -52,17 +44,17 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
-                      onPressed: () => !loadingState.isLoading.value
+                      onPressed: () => !loadingState.isLoadingSave.value
                           ? Navigator.of(context).pop()
                           : null,
                     );
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: const Hero(
-            tag: "Judul & Tahun Penelitian",
+          title: Hero(
+            tag: NameTimeline.step1_1.title,
             child: Text(
-              "Judul & Tahun Penelitian",
+              NameTimeline.step1_1.title,
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -132,7 +124,7 @@ class _ContentState extends State<Content> {
 
   @override
   Widget build(BuildContext context) {
-    final loadingState = Provider.of<LoadingState>(context);
+    final loadingState = Provider.of<LoadingSaveJudulTahunUsulanState>(context);
 
     return Column(
       children: [
@@ -162,11 +154,17 @@ class _ContentState extends State<Content> {
                                     ),
                                     ItemStepCreadCrumb(
                                       title: Module.penelitian_internal.value,
+                                      onTap: () => Navigator.of(context)
+                                        ..pop()
+                                        ..pop(),
+                                    ),
+                                    ItemStepCreadCrumb(
+                                      title: "Form Pengajuan",
                                       onTap: () => Navigator.of(context).pop(),
                                     ),
                                     ItemStepCreadCrumb(
-                                      title: Module.penelitian_internal.value,
-                                      onTap: () => {},
+                                      title: "Judul & Tahun Usulan Penelitian",
+                                      onTap: () => Navigator.of(context).pop(),
                                     ),
                                   ]),
                             )
@@ -284,13 +282,13 @@ class _ContentState extends State<Content> {
           ),
         ),
         FooterAction(
-          isLoading: loadingState.isLoading,
+          isLoading: loadingState.isLoadingSave,
           optionalBuilder: (height) => SizedBox.shrink(),
           onPress: (double height) {
-            if (!loadingState.isLoading.value) {
-              loadingState.isLoading.value = true;
+            if (!loadingState.isLoadingSave.value) {
+              loadingState.isLoadingSave.value = true;
               Future.delayed(const Duration(seconds: 2), () {
-                loadingState.isLoading.value = false;
+                loadingState.isLoadingSave.value = false;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Data berhasil disimpan!'),

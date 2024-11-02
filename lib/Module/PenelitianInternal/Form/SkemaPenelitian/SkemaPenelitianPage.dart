@@ -2,12 +2,18 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
+import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitian/Provider/LoadingSaveSkemaPenelitianState.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitian/RadioModel.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
+import 'package:sipaksi/Module/Shared/Module.dart';
+import 'package:sipaksi/Module/Shared/constant.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class SkemaPenelitianPage extends StatefulWidget {
@@ -18,6 +24,93 @@ class SkemaPenelitianPage extends StatefulWidget {
 }
 
 class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
+  @override
+  Widget build(BuildContext context) {
+    Size size;
+    double height, width;
+
+    size = MediaQuery.of(context).size;
+    width = size.width;
+    height = size.height;
+    Module current = Module.penelitian_internal;
+
+    return ChangeNotifierProvider(
+      create: (context) => LoadingSaveSkemaPenelitianState(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: LayoutBuilder(
+            builder: (context, constraints) {
+              final loadingState =
+                  Provider.of<LoadingSaveSkemaPenelitianState>(context);
+
+              return constraints.maxWidth >= 768
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => !loadingState.isLoadingSave.value
+                          ? Navigator.of(context).pop()
+                          : null,
+                    );
+            },
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Hero(
+            tag: NameTimeline.step1_2.title,
+            child: Text(
+              NameTimeline.step1_2.title,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth > 768) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Sidebar.createSidebar(
+                      context: context,
+                      height: height,
+                      list: ListItemsSidebar(current),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Content(
+                      width: width,
+                      height: height,
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return Content(
+                width: width,
+                height: height,
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Content extends StatefulWidget {
+  const Content({super.key, required this.width, required this.height});
+
+  final double width, height;
+
+  @override
+  State<Content> createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
   List<RadioModel> listKategori = [];
   static Future<List<Post>> getPosts() async {
     try {
@@ -41,7 +134,6 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
 
   late List<String> errorMessages = [];
   late Future<List<Post>> postsFuture;
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   @override
   void initState() {
@@ -76,248 +168,219 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size;
-    double height, width;
+    final loadingState = Provider.of<LoadingSaveSkemaPenelitianState>(context);
 
-    size = MediaQuery.of(context).size;
-    width = size.width;
-    height = size.height;
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () =>
-              !isLoading.value ? Navigator.of(context).pop() : null,
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Hero(
-          tag: "Skema Penelitian",
-          child: Text(
-            "Skema Penelitian",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "Kategori Skema",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(context).primaryColor,
-                            ),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Kategori Skema",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        Expanded(
-                          child: Text(
-                            kategoriSkema == null ? "tidak boleh kosong" : "",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 50,
-                      child: ListView.builder(
-                        itemCount: listKategori.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            // splashColor: Colors.blueAccent,
-                            onTap: () {
-                              setState(() {
-                                for (var element in listKategori) {
-                                  element.isSelected = false;
-                                }
-                                listKategori[index].isSelected = true;
-                                kategoriSkema = listKategori[index];
-                              });
-                            },
-                            child: RadioItem(listKategori[index]),
-                          );
-                        },
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "TKT",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                      Expanded(
+                        child: Text(
+                          kategoriSkema == null ? "tidak boleh kosong" : "",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
-                        Expanded(
-                          child: Text(
-                            tkt == start_tick ? "tidak boleh kosong" : "",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SfSlider(
-                      min: start_tick,
-                      max: 9,
-                      interval: 1,
-                      stepSize: 1,
-                      showTicks: true,
-                      showLabels: true,
-                      enableTooltip: true,
-                      value: tkt,
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      inactiveColor:
-                          Theme.of(context).colorScheme.tertiaryContainer,
-                      onChanged: (dynamic newValue) {
-                        setState(() {
-                          tkt = newValue;
-                        });
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                      itemCount: listKategori.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          // splashColor: Colors.blueAccent,
+                          onTap: () {
+                            setState(() {
+                              for (var element in listKategori) {
+                                element.isSelected = false;
+                              }
+                              listKategori[index].isSelected = true;
+                              kategoriSkema = listKategori[index];
+                            });
+                          },
+                          child: RadioItem(listKategori[index]),
+                        );
                       },
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            "Kategori TKT",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "TKT",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        Expanded(
-                          child: Text(
-                            kategoriTkt == null ? "tidak boleh kosong" : "",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          tkt == start_tick ? "tidak boleh kosong" : "",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
-                      ],
-                    ),
-                    FutureBuilder<List<Post>>(
-                      future: postsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CenterLoadingComponent(height: 50);
-                        } else if (snapshot.hasError) {
-                          // errorMessages.add(snapshot.error.toString());
-                          return ErrorComponent(
-                            height: height,
-                            errorMessage: snapshot.error.toString(),
-                          );
-                        } else if (!snapshot.hasData ||
-                            snapshot.data!.isEmpty) {
-                          return DataNotFoundComponent(width: width);
-                        } else {
-                          final posts = snapshot.data!;
-                          return ListView.builder(
-                            itemCount: posts.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final post = posts[index];
-                              return ListTile(
-                                title: Text(post.title ?? "-",
-                                    style: TextStyle(
-                                      color: post.title == kategoriTkt?.title
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .tertiary
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .inverseSurface,
-                                    )),
-                                leading: Radio<Post>(
-                                  value: post,
-                                  activeColor:
-                                      Theme.of(context).colorScheme.tertiary,
-                                  groupValue: kategoriTkt,
-                                  onChanged: (Post? value) {
-                                    setState(() {
-                                      kategoriTkt = value;
-                                    });
-                                    print(kategoriTkt?.title);
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  SfSlider(
+                    min: start_tick,
+                    max: 9,
+                    interval: 1,
+                    stepSize: 1,
+                    showTicks: true,
+                    showLabels: true,
+                    enableTooltip: true,
+                    value: tkt,
+                    activeColor: Theme.of(context).colorScheme.tertiary,
+                    inactiveColor:
+                        Theme.of(context).colorScheme.tertiaryContainer,
+                    onChanged: (dynamic newValue) {
+                      setState(() {
+                        tkt = newValue;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          "Kategori TKT",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          kategoriTkt == null ? "tidak boleh kosong" : "",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  FutureBuilder<List<Post>>(
+                    future: postsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CenterLoadingComponent(height: 50);
+                      } else if (snapshot.hasError) {
+                        // errorMessages.add(snapshot.error.toString());
+                        return ErrorComponent(
+                          height: widget.height,
+                          errorMessage: snapshot.error.toString(),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return DataNotFoundComponent(width: widget.width);
+                      } else {
+                        final posts = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final post = posts[index];
+                            return ListTile(
+                              title: Text(post.title ?? "-",
+                                  style: TextStyle(
+                                    color: post.title == kategoriTkt?.title
+                                        ? Theme.of(context).colorScheme.tertiary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .inverseSurface,
+                                  )),
+                              leading: Radio<Post>(
+                                value: post,
+                                activeColor:
+                                    Theme.of(context).colorScheme.tertiary,
+                                groupValue: kategoriTkt,
+                                onChanged: (Post? value) {
+                                  setState(() {
+                                    kategoriTkt = value;
+                                  });
+                                  print(kategoriTkt?.title);
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  )
+                ],
               ),
             ),
           ),
-          FooterAction(
-            isLoading: isLoading,
-            optionalBuilder: (height) => SizedBox.shrink(),
-            onPress: (double height) {
-              if (!isLoading.value) {
-                isLoading.value = true;
-                Future.delayed(const Duration(seconds: 2), () {
-                  isLoading.value = false;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Data berhasil disimpan!'),
-                      duration: const Duration(seconds: 2),
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        bottom: height + 8,
-                      ),
+        ),
+        FooterAction(
+          isLoading: loadingState.isLoadingSave,
+          optionalBuilder: (height) => SizedBox.shrink(),
+          onPress: (double height) {
+            if (!loadingState.isLoadingSave.value) {
+              loadingState.isLoadingSave.value = true;
+              Future.delayed(const Duration(seconds: 2), () {
+                loadingState.isLoadingSave.value = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Data berhasil disimpan!'),
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      bottom: height + 8,
                     ),
-                  );
-                });
-              }
-              print("footerHeight: ${height.toString()}");
-            },
-          ),
-        ],
-      ),
+                  ),
+                );
+              });
+            }
+            print("footerHeight: ${height.toString()}");
+          },
+        ),
+      ],
     );
   }
 }
