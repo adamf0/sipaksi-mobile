@@ -198,7 +198,7 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return FractionallySizedBox(
-              heightFactor: 1.0,
+              heightFactor: 0.8,
               widthFactor: 1.0,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -426,7 +426,7 @@ class Content extends StatelessWidget {
             children.add(Section(
               title: item.title,
               subtitle: item.description,
-              isDone: item.isDone,
+              isDone: item.isDone, //3_2_1 & 3_2_2 ada bug state isDone
               required: item.required,
               subRender: item.subItems.isNotEmpty
                   ? Timeline(

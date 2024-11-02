@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
@@ -65,6 +66,7 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
             ),
           ),
         ),
+        backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth > 768) {
@@ -179,6 +181,42 @@ class _ContentState extends State<Content> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return constraints.maxWidth >= 768
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: widget.height * 0.02,
+                              ),
+                              child: StepBreadCrumb.createBreadCrumb(
+                                  context: context,
+                                  list: [
+                                    ItemStepCreadCrumb(
+                                      icon: Icons.home,
+                                      onTap: () => Navigator.of(context)
+                                        ..pop()
+                                        ..pop()
+                                        ..pop(),
+                                    ),
+                                    ItemStepCreadCrumb(
+                                      title: Module.penelitian_internal.value,
+                                      onTap: () => Navigator.of(context)
+                                        ..pop()
+                                        ..pop(),
+                                    ),
+                                    ItemStepCreadCrumb(
+                                      title: "Form Pengajuan",
+                                      onTap: () => Navigator.of(context).pop(),
+                                    ),
+                                    ItemStepCreadCrumb(
+                                      title: NameTimeline.step1_2.title,
+                                      onTap: () => {},
+                                    ),
+                                  ]),
+                            )
+                          : SizedBox.shrink();
+                    },
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

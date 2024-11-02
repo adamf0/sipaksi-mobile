@@ -59,6 +59,7 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
             ),
           ),
         ),
+        backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth > 768) {
@@ -163,8 +164,8 @@ class _ContentState extends State<Content> {
                                       onTap: () => Navigator.of(context).pop(),
                                     ),
                                     ItemStepCreadCrumb(
-                                      title: "Judul & Tahun Usulan Penelitian",
-                                      onTap: () => Navigator.of(context).pop(),
+                                      title: NameTimeline.step1_1.title,
+                                      onTap: () => {},
                                     ),
                                   ]),
                             )

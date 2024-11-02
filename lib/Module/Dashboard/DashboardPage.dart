@@ -76,6 +76,7 @@ class _DashboardPageState extends State<DashboardPage> {
             notificationTap: () {},
             logoutTap: () {},
           ),
+          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: LayoutBuilder(
               builder: (context, constraints) {

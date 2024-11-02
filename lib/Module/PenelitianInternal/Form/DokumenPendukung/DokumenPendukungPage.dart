@@ -201,7 +201,7 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return FractionallySizedBox(
-              heightFactor: 1.1,
+              heightFactor: 0.8,
               widthFactor: 1.0,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
