@@ -1,5 +1,5 @@
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FilterStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 
 class DokumenTambahanFilterStrategy implements FilterStrategy<Post> {
   @override

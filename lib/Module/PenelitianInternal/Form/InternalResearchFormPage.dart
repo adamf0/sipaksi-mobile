@@ -16,8 +16,11 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/PrioritasRiset/PrioritasR
 import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/RabPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/RumpunIlmu/RumpunIlmuPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitian/SkemaPenelitianPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Status.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Status.dart';
+import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
 import 'dart:math' as math;
+
+import 'package:sipaksi/Module/Shared/Module.dart';
 
 class InternalResearchFormPage extends StatefulWidget {
   const InternalResearchFormPage({super.key});
@@ -36,10 +39,10 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
 
     List<ItemsTimeline> list = [
       ItemsTimeline(
-        title: "Identitas Usulan Penelitian",
+        title: NameTimeline.step1.title,
         subItems: [
           ItemsTimeline(
-            title: "Judul & Tahun Usulan Penelitian",
+            title: NameTimeline.step1_1.title,
             isDone: false,
             required: true,
             action: () {
@@ -53,9 +56,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             subItems: [],
           ),
           ItemsTimeline(
-            title: "Skema Penelitian",
-            description:
-                "pada tahap ini anda harus menyetor data kategori skema, txt dan kategori tkt yang ingin dicapai",
+            title: NameTimeline.step1_2.title,
+            description: NameTimeline.step1_2.description,
             required: true,
             isDone: true,
             action: () {
@@ -71,12 +73,11 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Pemilihan Program Penelitian",
+        title: NameTimeline.step2.title,
         subItems: [
           ItemsTimeline(
-            title: "Prioritas Riset",
-            description:
-                "pada tahap ini anda harus menyetor data prioritas riset, bidang fokus penelitian, tema dan topik",
+            title: NameTimeline.step2_1.title,
+            description: NameTimeline.step2_1.description,
             required: true,
             isDone: true,
             action: () {
@@ -90,9 +91,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             subItems: [],
           ),
           ItemsTimeline(
-            title: "Rumpun Ilmu & Lama Kegiatan",
-            description:
-                "pada tahap ini anda harus menyetor data rumpun ilmu 1-3 dan lama Kegiatan",
+            title: NameTimeline.step2_2.title,
+            description: NameTimeline.step2_2.description,
             required: true,
             isDone: true,
             action: () {
@@ -108,12 +108,11 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Anggota Peneliti",
+        title: NameTimeline.step3.title,
         subItems: [
           ItemsTimeline(
-            title: "Anggota Peneliti (Dosen)",
-            description:
-                "pada tahap ini anda harus menyetor data daftar dosen unpak yang berkontribusi dalam penelitian ini",
+            title: NameTimeline.step3_1.title,
+            description: NameTimeline.step3_1.description,
             required: true,
             isDone: true,
             action: () {
@@ -127,7 +126,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             subItems: [],
           ),
           ItemsTimeline(
-            title: "Anggota Peneliti (Mahasiswa)",
+            title: NameTimeline.step3_2.title,
             // description:
             //     "pada tahap ini anda harus menyetor data daftar mahasiswa unpak yang ikut dalam penelitian ini",
             required: true,
@@ -135,7 +134,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             action: () {},
             subItems: [
               ItemsTimeline(
-                title: "Data Mahasiswa",
+                title: NameTimeline.step3_2_1.title,
                 required: true,
                 isDone: true,
                 action: () {
@@ -150,7 +149,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                 subItems: [],
               ),
               ItemsTimeline(
-                title: "Data MBKM",
+                title: NameTimeline.step3_2_2.title,
                 required: true,
                 isDone: true,
                 action: () {
@@ -167,9 +166,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             ],
           ),
           ItemsTimeline(
-            title: "Anggota Peneliti (Non Dosen)",
-            description:
-                "pada tahap ini anda harus menyetor data daftar dosen diluar unpak atau bukan dosen yang berkontribusi dalam penelitian ini",
+            title: NameTimeline.step3_3.title,
+            description: NameTimeline.step3_3.description,
             required: true,
             isDone: true,
             action: () {
@@ -185,12 +183,11 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Substansi",
+        title: NameTimeline.step4.title,
         subItems: [
           ItemsTimeline(
-            title: "Unggah Proposal Penelitian",
-            description:
-                "pada tahap ini anda harus unggah berkas proposal penelitian sesuai template yang telah disediakan",
+            title: NameTimeline.step4_1.title,
+            description: NameTimeline.step4_1.description,
             required: true,
             isDone: true,
             action: () {
@@ -204,9 +201,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             subItems: [],
           ),
           ItemsTimeline(
-            title: "Luaran Capaian Wajib",
-            description:
-                "pada tahap ini anda harus menyetor data luaran capaian dan ini sifatnya wajib",
+            title: NameTimeline.step4_2.title,
+            description: NameTimeline.step4_2.description,
             required: true,
             isDone: true,
             action: () {
@@ -220,9 +216,8 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             subItems: [],
           ),
           ItemsTimeline(
-            title: "Luaran Capaian Tambahan",
-            description:
-                "pada tahap ini anda harus menyetor data luaran capaian tambahan dan ini sifatnya opsional. anda melengkapi ini akan medapatkan point lebih selama review lpmp dan reviewer.",
+            title: NameTimeline.step4_3.title,
+            description: NameTimeline.step4_3.description,
             required: false,
             isDone: true,
             action: () {
@@ -238,12 +233,11 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Rencana Anggaran Biaya",
+        title: NameTimeline.step5.title,
         subItems: [
           ItemsTimeline(
-            title: "Data RAB",
-            description:
-                "pada tahap ini anda harus memberitahu kami rab secara menyeluruh dan lengkap",
+            title: NameTimeline.step5_1.title,
+            description: NameTimeline.step5_1.description,
             required: true,
             isDone: true,
             action: () {
@@ -259,12 +253,11 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Dokumen Pendukung",
+        title: NameTimeline.step6.title,
         subItems: [
           ItemsTimeline(
-            title: "Unggah Dokumen Pendukung",
-            description:
-                "pada tahap ini anda harus unggah berkas dokumen pendukung dan ini sifatnya opsional",
+            title: NameTimeline.step6_1.title,
+            description: NameTimeline.step6_1.description,
             required: false,
             isDone: true,
             action: () {
@@ -280,12 +273,11 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         ],
       ),
       ItemsTimeline(
-        title: "Dokumen Kontrak",
+        title: NameTimeline.step7.title,
         subItems: [
           ItemsTimeline(
-            title: "Unggah Dokumen Kontrak",
-            description:
-                "pada tahap ini anda harus unggah berkas dokumen kontrak dan ini sifatnya wajib",
+            title: NameTimeline.step7_1.title,
+            description: NameTimeline.step7_1.description,
             required: true,
             isDone: true,
             action: () {
@@ -375,10 +367,10 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Hero(
-          tag: "Penelitian Internal",
+        title: Hero(
+          tag: Module.penelitian_internal.value,
           child: Text(
-            "Penelitian Internal",
+            Module.penelitian_internal.value,
             style: TextStyle(color: Colors.white),
           ),
         ),

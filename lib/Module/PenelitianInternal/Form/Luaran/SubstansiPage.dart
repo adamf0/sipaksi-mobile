@@ -3,7 +3,7 @@ import 'package:sipaksi/Components/UploadFile/BoxSelectFile.dart';
 import 'package:sipaksi/Components/UploadFile/FileSelectedUpload.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitianManager.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SingleFileLifecycleManager.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -151,7 +151,7 @@ class _SubstansiPageState extends State<SubstansiPage> {
           ),
           FooterAction(
             isLoading: ValueNotifier(isLoading),
-            optionalBuilder: (height) => Container(),
+            optionalBuilder: (height) => SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading) {
                 uploadFile();

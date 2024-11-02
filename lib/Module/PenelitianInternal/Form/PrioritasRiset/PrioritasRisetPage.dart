@@ -143,7 +143,7 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
           ),
           FooterAction(
             isLoading: isLoading,
-            optionalBuilder: (height) => Container(),
+            optionalBuilder: (height) => SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

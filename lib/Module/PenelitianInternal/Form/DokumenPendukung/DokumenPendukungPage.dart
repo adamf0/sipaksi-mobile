@@ -11,7 +11,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/Fetch/Do
 import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/Filter/DokumenTambahanFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/ItemList/DokumenTambahanStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SingleFileLifecycleManager.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -169,7 +169,7 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
                           style: TextStyle(fontSize: 14),
                         ),
                       )
-                    : Container(),
+                    : SizedBox.shrink(),
             buttonHide: true,
             onPress: (double height) {},
           ),

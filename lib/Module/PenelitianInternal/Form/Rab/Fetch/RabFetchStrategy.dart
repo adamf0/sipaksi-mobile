@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/FetchStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 
 class RabFetchStrategy implements FetchStrategy<Post> {
   final Dio _dio;

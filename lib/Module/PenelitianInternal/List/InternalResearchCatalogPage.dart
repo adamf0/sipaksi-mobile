@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
-import 'package:sipaksi/Module/PenelitianInternal/Form/InternalResearchFormPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Dialog.dart';
+import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
+import 'package:sipaksi/Module/Abstraction/CommandInvoker.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Event/DeleteCommand.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Event/EditCommand.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/ItemsPopmenu.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:dio/dio.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Status.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Status.dart';
+import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
+import 'package:sipaksi/Module/Shared/Module.dart';
+import 'package:sipaksi/Module/Shared/constant.dart';
 
 class InternalResearchCatalogPage extends StatefulWidget {
   const InternalResearchCatalogPage({super.key});
@@ -67,8 +72,6 @@ class _InternalResearchCatalogPageState
     }
 
     final snackBar = SnackBar(content: Text(message));
-
-    // Show the SnackBar using ScaffoldMessenger
     _scaffoldKey.currentState?.showSnackBar(snackBar);
   }
 
@@ -82,17 +85,24 @@ class _InternalResearchCatalogPageState
     height = size.height;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
+        leading: LayoutBuilder(
+          builder: (context, constraints) {
+            return constraints.maxWidth >= 768
+                ? SizedBox.shrink()
+                : IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  );
+          },
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Penelitian Internal",
+        title: Text(
+          Module.penelitian_internal.value,
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -107,37 +117,132 @@ class _InternalResearchCatalogPageState
           color: Colors.white,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(bottom: height * .1),
-          child: FutureBuilder<List<Post>>(
-            future: postsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CenterLoadingComponent();
-              } else if (snapshot.hasError) {
-                // errorMessages.add(snapshot.error.toString());
-                return ErrorComponent(
+      body: Content(height: height, width: width, postsFuture: postsFuture),
+    );
+  }
+}
+
+class Content extends StatelessWidget {
+  const Content({
+    super.key,
+    required this.height,
+    required this.width,
+    required this.postsFuture,
+  });
+
+  final double height;
+  final double width;
+  final Future<List<Post>> postsFuture;
+
+  @override
+  Widget build(BuildContext context) {
+    Module current = Module.penelitian_internal;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 768) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Sidebar.createSidebar(
+                  context: context,
                   height: height,
-                  errorMessage: snapshot.error.toString(),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return DataNotFoundComponent(width: width);
-              } else {
-                final posts = snapshot.data!;
-                return ListView.builder(
-                  itemCount: posts.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final post = posts[index];
-                    return ItemsListview(post: post);
-                  },
-                );
-              }
-            },
-          ),
-        ),
+                  list: ListItemsSidebar(current),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: width * .01,
+                          right: width * .01,
+                          top: 10,
+                        ),
+                        child: StepBreadCrumb.createBreadCrumb(
+                            context: context,
+                            list: [
+                              ItemStepCreadCrumb(
+                                icon: Icons.home,
+                                onTap: () => Navigator.of(context).pop(),
+                              ),
+                              ItemStepCreadCrumb(
+                                title: Module.penelitian_internal.value,
+                                onTap: () => {},
+                              )
+                            ]),
+                      ),
+                      ListCatalog(
+                        height: height,
+                        width: width,
+                        sourceFuture: postsFuture,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return SingleChildScrollView(
+            child: ListCatalog(
+              height: height,
+              width: width,
+              sourceFuture: postsFuture,
+            ),
+          );
+        }
+      },
+    );
+  }
+}
+
+class ListCatalog extends StatelessWidget {
+  const ListCatalog({
+    super.key,
+    required this.height,
+    required this.width,
+    required this.sourceFuture,
+  });
+
+  final double height, width;
+  final Future<List<Post>> sourceFuture;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: height * .1),
+      child: FutureBuilder<List<Post>>(
+        future: sourceFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CenterLoadingComponent();
+          } else if (snapshot.hasError) {
+            // errorMessages.add(snapshot.error.toString());
+            return ErrorComponent(
+              height: height,
+              errorMessage: snapshot.error.toString(),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return DataNotFoundComponent(width: width);
+          } else {
+            final posts = snapshot.data!;
+            return ListView.builder(
+              itemCount: posts.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return ItemsListview(post: post);
+              },
+            );
+          }
+        },
       ),
     );
   }
@@ -155,11 +260,11 @@ class ItemsListview extends StatelessWidget {
   Widget build(BuildContext context) {
     Status status = Status.parse("tolak");
     PopmenuItemsFactory factory = PopmenuItemsFactory(type: status.key);
-    DialogFactory dialog = DialogFactory(
-      context: context,
-      content: Text("Anda yakin ingin hapus penelitian '${post.title}'"),
-    );
 
+    final commandInvoker = CommandInvoker({
+      "edit": EditCommand(),
+      "delete": DeleteCommand(),
+    });
     return Container(
       margin: const EdgeInsets.only(
         top: 8,
@@ -228,15 +333,17 @@ class ItemsListview extends StatelessWidget {
                     onSelected: (String value) => {
                       if (value == "edit")
                         {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const InternalResearchFormPage(),
-                            ),
-                          )
+                          commandInvoker.executeCommand(value, params: {
+                            'context': context,
+                          })
                         }
                       else if (value == "delete")
-                        {dialog.showDialog("confirm_dialog")}
+                        {
+                          commandInvoker.executeCommand(value, params: {
+                            'context': context,
+                            'title': post.title,
+                          })
+                        }
                       else if (value == "approve_member")
                         {}
                       else if (value == "reject_member")
@@ -255,7 +362,7 @@ class ItemsListview extends StatelessWidget {
                         {}
                     },
                   )
-                : Container())
+                : SizedBox.shrink())
           ],
         ),
       ),
@@ -277,9 +384,10 @@ class InfoItemsListview extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-              fontWeight: FontWeight.w300,
-              fontFamily: 'Manrope',
-              color: Colors.black),
+            fontWeight: FontWeight.w300,
+            fontFamily: 'Manrope',
+            color: Colors.black,
+          ),
         ),
         (value is Widget
             ? value

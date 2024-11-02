@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sipaksi/Module/ColorExtension.dart';
 import 'package:sipaksi/Module/Dashboard/DashboardPage.dart';
-import 'package:sipaksi/Module/Login/LoginPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunPenelitian/JudulTahunUsulanPage.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/InternalResearchCatalogPage.dart';
 
 Future<void> main() async {
   await ScreenUtil.ensureScreenSize();
@@ -81,7 +82,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      home: SafeArea(child: LoginPage()),
+      home: SafeArea(child: DashboardPage()),
     );
   }
 }

@@ -11,7 +11,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Fetch/LuaranTambah
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Filter/LuaranFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/ItemList/LuaranStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SingleFileLifecycleManager.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -169,7 +169,7 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
                           style: TextStyle(fontSize: 14),
                         ),
                       )
-                    : Container(),
+                    : SizedBox.shrink(),
             buttonHide: true,
             onPress: (double height) {},
           ),

@@ -6,7 +6,7 @@ import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SkemaPenelitian/RadioModel.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
@@ -293,7 +293,7 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
           ),
           FooterAction(
             isLoading: isLoading,
-            optionalBuilder: (height) => Container(),
+            optionalBuilder: (height) => SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

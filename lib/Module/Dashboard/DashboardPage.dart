@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sipaksi/Module/Dashboard/TypeSubmission.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/InternalResearchCatalogPage.dart';
+import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -32,20 +34,29 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     final List<TypeSubmission> listMenus = [
       TypeSubmission(
-          judul: "Insentif", img_asset: 'lib/assets/images/money.png'),
+        judul: "Insentif",
+        img_asset: 'lib/assets/images/money.png',
+      ),
       TypeSubmission(
-          judul: "Penelitian Internal",
-          img_asset: 'lib/assets/images/microscope.png'),
+        judul: Module.penelitian_internal.value,
+        img_asset: 'lib/assets/images/microscope.png',
+      ),
       TypeSubmission(
-          judul: "Penelitian Nasional",
-          img_asset: 'lib/assets/images/national.png'),
+        judul: Module.penelitian_nasional.value,
+        img_asset: 'lib/assets/images/national.png',
+      ),
       TypeSubmission(
-          judul: "PKM Internal", img_asset: 'lib/assets/images/creativity.png'),
+        judul: Module.pkm_internal.value,
+        img_asset: 'lib/assets/images/creativity.png',
+      ),
       TypeSubmission(
-          judul: "PKM Nasional",
-          img_asset: 'lib/assets/images/compotitive.png'),
+        judul: Module.pkm_nasional.value,
+        img_asset: 'lib/assets/images/compotitive.png',
+      ),
       TypeSubmission(
-          judul: "PPM", img_asset: 'lib/assets/images/international.png'),
+        judul: Module.ppm.value,
+        img_asset: 'lib/assets/images/international.png',
+      ),
     ];
 
     final size = MediaQuery.of(context).size;
@@ -93,7 +104,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         listMenus: listMenus,
                         controller: innerCarouselController,
                         onTap: (tap) {
-                          if (tap.judul == "Penelitian Internal") {
+                          if (tap.judul == Module.penelitian_internal.value) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -414,7 +425,7 @@ class BottomNav extends StatelessWidget {
 //     return LayoutBuilder(
 //       builder: (context, constraints) {
 //         if (constraints.maxWidth >= 768) {
-//           return Container();
+//           return SizedBox.shrink();
 //         } else {
 //           return BottomAppBar(
 //             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -485,7 +496,7 @@ class ButtonQuestion extends StatelessWidget {
 //     return LayoutBuilder(
 //       builder: (context, constraints) {
 //         if (constraints.maxWidth >= 768) {
-//           return Container();
+//           return SizedBox.shrink();
 //         } else {
 //           return FloatingActionButton(
 //             onPressed: () {},
@@ -735,6 +746,7 @@ class Menus extends StatelessWidget {
           item: item,
           width: itemWidth ?? width,
           onTap: onTap,
+          groupText: AutoSizeGroup(),
         ),
       );
     }
@@ -774,7 +786,7 @@ class Menus extends StatelessWidget {
                     autoPlay: true,
                     enlargeCenterPage: true,
                     enableInfiniteScroll: true,
-                    viewportFraction: .6,
+                    viewportFraction: .8,
                     height: height,
                   ),
                   items: listMenus.map((item) => buildItem(item)).toList(),
@@ -883,11 +895,13 @@ class ItemSlider extends StatelessWidget {
     required this.item,
     required this.width,
     required this.onTap,
+    required this.groupText,
   });
 
   final TypeSubmission item;
   final double width;
   final Function(TypeSubmission p1) onTap;
+  final AutoSizeGroup groupText;
 
   @override
   Widget build(BuildContext context) {
@@ -909,11 +923,11 @@ class ItemSlider extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
+                AutoSizeText(
                   item.judul,
-                  style: TextStyle(fontSize: 20),
+                  group: groupText,
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10)
               ],
             ),
           ),

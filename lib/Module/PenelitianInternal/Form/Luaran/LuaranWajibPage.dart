@@ -7,7 +7,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Fetch/LuaranWajibF
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Filter/LuaranFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Form/LuaranWajibFormPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/ItemList/LuaranStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:sipaksi/Module/Helpers/Utility.dart';
 
@@ -162,7 +162,7 @@ class _LuaranWajibPageState extends State<LuaranWajibPage> {
                           style: TextStyle(fontSize: 14),
                         ),
                       )
-                    : Container(),
+                    : SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

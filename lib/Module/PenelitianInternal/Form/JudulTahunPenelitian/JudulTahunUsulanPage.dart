@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sipaksi/Module/ColorExtension.dart';
+import 'package:provider/provider.dart';
+import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
+import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
+import 'package:sipaksi/Module/Shared/Module.dart';
+import 'package:sipaksi/Module/Shared/constant.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+class LoadingState with ChangeNotifier {
+  ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  ValueNotifier<bool> get isLoading => _isLoading;
+
+  void setLoading(bool loading) {
+    _isLoading.value = loading;
+    notifyListeners();
+  }
+}
 
 class JudulTahunUsulanPage extends StatefulWidget {
   const JudulTahunUsulanPage({super.key});
@@ -12,12 +27,97 @@ class JudulTahunUsulanPage extends StatefulWidget {
 }
 
 class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
+  @override
+  Widget build(BuildContext context) {
+    Size size;
+    double height, width;
+
+    size = MediaQuery.of(context).size;
+    width = size.width;
+    height = size.height;
+    Module current = Module.penelitian_internal;
+
+    return ChangeNotifierProvider(
+      create: (context) => LoadingState(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: LayoutBuilder(
+            builder: (context, constraints) {
+              final loadingState = Provider.of<LoadingState>(context);
+
+              return constraints.maxWidth >= 768
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => !loadingState.isLoading.value
+                          ? Navigator.of(context).pop()
+                          : null,
+                    );
+            },
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: const Hero(
+            tag: "Judul & Tahun Penelitian",
+            child: Text(
+              "Judul & Tahun Penelitian",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth > 768) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Sidebar.createSidebar(
+                      context: context,
+                      height: height,
+                      list: ListItemsSidebar(current),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Content(
+                      width: width,
+                      height: height,
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return Content(
+                width: width,
+                height: height,
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Content extends StatefulWidget {
+  const Content({super.key, required this.width, required this.height});
+
+  final double width, height;
+
+  @override
+  State<Content> createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
   late DateTime _focusedDay;
   late DateTime _firstDay;
   late DateTime _lastDay;
   late DateTime _selectedDay;
   late CalendarFormat _calendarFormat;
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   @override
   void initState() {
@@ -32,174 +132,183 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () =>
-              !isLoading.value ? Navigator.of(context).pop() : null,
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Hero(
-          tag: "Judul & Tahun Penelitian",
-          child: Text(
-            "Judul & Tahun Penelitian",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Judul Penelitian",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
-                      ),
+    final loadingState = Provider.of<LoadingState>(context);
+
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return constraints.maxWidth >= 768
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: widget.height * 0.02,
+                              ),
+                              child: StepBreadCrumb.createBreadCrumb(
+                                  context: context,
+                                  list: [
+                                    ItemStepCreadCrumb(
+                                      icon: Icons.home,
+                                      onTap: () => Navigator.of(context)
+                                        ..pop()
+                                        ..pop()
+                                        ..pop(),
+                                    ),
+                                    ItemStepCreadCrumb(
+                                      title: Module.penelitian_internal.value,
+                                      onTap: () => Navigator.of(context).pop(),
+                                    ),
+                                    ItemStepCreadCrumb(
+                                      title: Module.penelitian_internal.value,
+                                      onTap: () => {},
+                                    ),
+                                  ]),
+                            )
+                          : SizedBox.shrink();
+                    },
+                  ),
+                  Text(
+                    "Judul Penelitian",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    TextField(
-                      keyboardType: TextInputType.text,
-                      obscureText: false,
-                      onChanged: (value) => {},
-                      textInputAction: TextInputAction.next,
-                      maxLines: 1,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.outline),
-                      decoration: InputDecoration(
-                        errorText: "belum diisi",
-                        hintStyle: TextStyle(
+                  ),
+                  TextField(
+                    keyboardType: TextInputType.text,
+                    obscureText: false,
+                    onChanged: (value) => {},
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.outline),
+                    decoration: InputDecoration(
+                      errorText: "belum diisi",
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
                           color: Theme.of(context).colorScheme.outline,
-                        ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 6),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor, width: 2),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 1,
-                          ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.error,
-                            width: 1,
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.error,
-                            width: 2,
-                          ),
+                          width: 1,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Tahun Usulan Kegiatan",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 2),
                       ),
-                    ),
-                    TableCalendar(
-                      calendarFormat: _calendarFormat,
-                      availableCalendarFormats: const {
-                        CalendarFormat.month: "Month"
-                      },
-                      onFormatChanged: (format) {},
-                      focusedDay: _focusedDay,
-                      firstDay: _firstDay,
-                      lastDay: _lastDay,
-                      onPageChanged: (focusedDay) {
-                        setState(() {
-                          _focusedDay = focusedDay;
-                        });
-                      },
-                      selectedDayPredicate: (day) =>
-                          isSameDay(day, _selectedDay),
-                      onDaySelected: (selectedDay, focusedDay) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay = focusedDay;
-                        });
-                      },
-                      calendarStyle: CalendarStyle(
-                        weekendTextStyle: TextStyle(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                          width: 1,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
                           color: Theme.of(context).colorScheme.error,
-                        ),
-                        selectedDecoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:
-                              Theme.of(context).colorScheme.tertiaryContainer,
+                          width: 1,
                         ),
                       ),
-                      calendarBuilders: CalendarBuilders(
-                        headerTitleBuilder: (context, day) {
-                          return Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(DateFormat('dd/MMMM/yyyy').format(day)),
-                          );
-                        },
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.error,
+                          width: 2,
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Tahun Usulan Kegiatan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  TableCalendar(
+                    calendarFormat: _calendarFormat,
+                    availableCalendarFormats: const {
+                      CalendarFormat.month: "Month"
+                    },
+                    onFormatChanged: (format) {},
+                    focusedDay: _focusedDay,
+                    firstDay: _firstDay,
+                    lastDay: _lastDay,
+                    onPageChanged: (focusedDay) {
+                      setState(() {
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    calendarStyle: CalendarStyle(
+                      weekendTextStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      selectedDecoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                      ),
+                    ),
+                    calendarBuilders: CalendarBuilders(
+                      headerTitleBuilder: (context, day) {
+                        return Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(DateFormat('dd/MMMM/yyyy').format(day)),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          FooterAction(
-            isLoading: isLoading,
-            optionalBuilder: (height) => Container(),
-            onPress: (double height) {
-              if (!isLoading.value) {
-                isLoading.value = true;
-                Future.delayed(const Duration(seconds: 2), () {
-                  isLoading.value = false;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Data berhasil disimpan!'),
-                      duration: const Duration(seconds: 2),
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        bottom: height + 8,
-                      ),
+        ),
+        FooterAction(
+          isLoading: loadingState.isLoading,
+          optionalBuilder: (height) => SizedBox.shrink(),
+          onPress: (double height) {
+            if (!loadingState.isLoading.value) {
+              loadingState.isLoading.value = true;
+              Future.delayed(const Duration(seconds: 2), () {
+                loadingState.isLoading.value = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Data berhasil disimpan!'),
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      bottom: height + 8,
                     ),
-                  );
-                });
-              }
-              print("footerHeight: ${height.toString()}");
-            },
-          ),
-        ],
-      ),
+                  ),
+                );
+              });
+            }
+            print("footerHeight: ${height.toString()}");
+          },
+        ),
+      ],
     );
   }
 }

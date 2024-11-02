@@ -7,7 +7,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Anggota
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Fetch/DosenFetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Filter/DosenFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemList/DosenItemListStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 
 class AnggotaPenelitiDosenPage extends StatefulWidget {
@@ -96,7 +96,7 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
           ),
           FooterAction(
             isLoading: isLoading,
-            optionalBuilder: (height) => Container(),
+            optionalBuilder: (height) => SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

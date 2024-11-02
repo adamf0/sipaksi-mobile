@@ -6,7 +6,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Anggota
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Fetch/MahasiswaFetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Filter/MahasiswaFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemList/MahasiswaItemListStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:sipaksi/Module/Helpers/Utility.dart';
 
@@ -96,7 +96,7 @@ class _AnggotaPenelitiMahasiswaPageState
           ),
           FooterAction(
             isLoading: isLoading,
-            optionalBuilder: (height) => Container(),
+            optionalBuilder: (height) => SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

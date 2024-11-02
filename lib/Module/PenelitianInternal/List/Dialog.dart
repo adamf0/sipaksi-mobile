@@ -79,7 +79,7 @@ class DialogFactory {
       barrierLabel: '',
       context: context, // Corrected context reference
       pageBuilder: (context, animation1, animation2) {
-        return Container();
+        return SizedBox.shrink();
       },
     );
   }

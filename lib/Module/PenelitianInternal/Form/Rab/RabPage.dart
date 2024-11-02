@@ -7,7 +7,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Filter/LuaranFilte
 import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/ItemList/LuaranStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/Fetch/RabFetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Rab/Form/RabFormPage.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:sipaksi/Module/Helpers/Utility.dart';
 
@@ -161,7 +161,7 @@ class _RabPageState extends State<RabPage> {
                           style: TextStyle(fontSize: 14),
                         ),
                       )
-                    : Container(),
+                    : SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

@@ -50,7 +50,7 @@ class FooterAction extends StatelessWidget {
                             style: TextStyle(fontSize: 14),
                           ),
                         )
-                      : Container());
+                      : SizedBox.shrink());
             },
           ),
         ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/Share/ItemListStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 
 class DokumenTambahanStrategy implements ItemListStrategy<Post> {
   @override

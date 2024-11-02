@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Status.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Status.dart';
 
 class PopmenuItemsFactory {
   final List<PopupMenuItem<String>> list;

@@ -11,7 +11,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Anggota
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Fetch/NonDosenFetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Filter/NonDosenFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemList/NonDosenItemListStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:sipaksi/Module/Helpers/Utility.dart';
 
@@ -166,7 +166,7 @@ class _AnggotaPenelitiNonDosenPageState
                           style: TextStyle(fontSize: 14),
                         ),
                       )
-                    : Container(),
+                    : SizedBox.shrink(),
             onPress: (double height) {
               if (!isLoading.value) {
                 isLoading.value = true;

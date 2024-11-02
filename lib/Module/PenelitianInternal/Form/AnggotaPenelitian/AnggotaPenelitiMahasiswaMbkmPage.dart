@@ -7,7 +7,7 @@ import 'package:sipaksi/Components/Search/Search.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitianManager.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Fetch/MahasiswaFetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Filter/MahasiswaFilterStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Post.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 
 class AnggotaPenelitiMahasiswaMbkmPage extends StatefulWidget {
@@ -180,7 +180,7 @@ class _AnggotaPenelitiMahasiswaMbkmPageState
           ),
           FooterAction(
             isLoading: isLoading,
-            optionalBuilder: (height) => Container(),
+            optionalBuilder: (height) => SizedBox.shrink(),
             onPress: (double height) {
               int totalKosong =
                   listBuktiMbkm.values.where((value) => value.isEmpty).length;
