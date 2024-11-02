@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/FileTypeGroup.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/MultipleFileLifecycleManager.dart';
 
 class MultipleFileUploadExample extends StatefulWidget {
@@ -36,12 +37,10 @@ class _MultipleFileUploadExampleState extends State<MultipleFileUploadExample>
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
-      allowedExtensions: [
-        'jpg',
-        'png',
-        'pdf',
-        'doc'
-      ], // Add your allowed extensions
+      allowedExtensions: FileTypeGroup.getExtensions([
+        FileTypeGroup.image,
+        FileTypeGroup.document,
+      ]), // Add your allowed extensions
     );
 
     if (result != null && result.files.isNotEmpty) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/UploadFile/BoxSelectFile.dart';
 import 'package:sipaksi/Components/UploadFile/FileSelectedUpload.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitianManager.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/FileTypeGroup.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SingleFileLifecycleManager.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
@@ -36,7 +37,13 @@ class _SubstansiPageState extends State<SubstansiPage> {
   }
 
   Future<void> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: FileTypeGroup.getExtensions([
+        FileTypeGroup.image,
+        FileTypeGroup.document,
+      ]),
+    );
     if (result != null && result.files.isNotEmpty) {
       setState(() {
         fileLifecycleManager.selectedFile = result.files.single;

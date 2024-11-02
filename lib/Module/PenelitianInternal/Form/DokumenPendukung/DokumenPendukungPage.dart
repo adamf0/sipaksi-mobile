@@ -10,6 +10,7 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Anggota
 import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/Fetch/DokumenTambahanFetchStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/Filter/DokumenTambahanFilterStrategy.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/DokumenPendukung/ItemList/DokumenTambahanStrategy.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/FileTypeGroup.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/SingleFileLifecycleManager.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
@@ -179,7 +180,13 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
   }
 
   Future<void> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: FileTypeGroup.getExtensions([
+        FileTypeGroup.image,
+        FileTypeGroup.document,
+      ]),
+    );
     if (result != null && result.files.isNotEmpty) {
       setState(() {
         fileLifecycleManager.selectedFile = result.files.single;
