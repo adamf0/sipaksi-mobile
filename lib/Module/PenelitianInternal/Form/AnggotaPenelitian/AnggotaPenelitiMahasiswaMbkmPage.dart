@@ -13,7 +13,9 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Filter/
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Provider/LoadingSaveAggotaPenelitiState.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
+import 'package:sipaksi/Module/Shared/DefaultState.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
+import 'package:sipaksi/Module/Shared/LoadingManager.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:sipaksi/Module/Shared/constant.dart';
 
@@ -53,7 +55,7 @@ class _AnggotaPenelitiMahasiswaMbkmPageState
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
-                      onPressed: () => !loadingState.isLoadingSave.value
+                      onPressed: () => !loadingState.isLoadingSave
                           ? Navigator.of(context).pop()
                           : null,
                     );
@@ -139,7 +141,8 @@ class _ContentState extends State<Content> {
   Widget build(BuildContext context) {
     final loadingState = Provider.of<LoadingSaveAggotaPenelitiState>(context);
     Debouncer _debouncer = Debouncer(milliseconds: 500);
-
+    LoadingManager loadingManager =
+        LoadingManager(DefaultState(loadingState.isLoadingSave));
     return Column(
       children: [
         Expanded(
@@ -209,11 +212,11 @@ class _ContentState extends State<Content> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "065117251", // You might want to make this dynamic
+                              "065117251",
                               style: TextStyle(color: color),
                             ),
                             Text(
-                              "Ilmu Komputer", // You might want to make this dynamic
+                              "Ilmu Komputer",
                               style: TextStyle(color: color),
                             ),
                             TextField(
@@ -289,7 +292,7 @@ class _ContentState extends State<Content> {
           ),
         ),
         FooterAction(
-          isLoading: loadingState.isLoadingSave,
+          isLoading: loadingManager.stateLoading,
           optionalBuilder: (height) => SizedBox.shrink(),
           onPress: (double height) {
             int totalKosong =
@@ -308,10 +311,14 @@ class _ContentState extends State<Content> {
                   ),
                 ),
               );
-            } else if (!loadingState.isLoadingSave.value) {
-              loadingState.isLoadingSave.value = true;
+            } else if (!loadingState.isLoadingSave) {
+              setState(() {
+                loadingState.setLoading(true);
+              });
               Future.delayed(const Duration(seconds: 2), () {
-                loadingState.isLoadingSave.value = false;
+                setState(() {
+                  loadingState.setLoading(false);
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Data berhasil disimpan!'),

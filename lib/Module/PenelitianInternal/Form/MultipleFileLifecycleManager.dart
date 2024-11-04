@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MultipleFileLifecycleManager with WidgetsBindingObserver {
   List<PlatformFile> selectedFiles = [];
 
   void init() {
     WidgetsBinding.instance.addObserver(this);
-    loadSavedFiles(); // Load saved files when initializing
+    loadSavedFiles();
   }
 
   void dispose() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LoadingSaveJudulTahunUsulanState with ChangeNotifier {
+class LoadingSaveLuaranTambahanFormState with ChangeNotifier {
   bool _isLoading = false;
 
   bool get isLoadingSave => _isLoading;

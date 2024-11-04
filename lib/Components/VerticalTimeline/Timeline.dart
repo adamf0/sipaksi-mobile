@@ -58,7 +58,6 @@ class Timeline extends StatelessWidget {
     List<Widget> tileLineItems = [];
     for (int index = 0; index < itemCount; index++) {
       final child = children[index];
-      // ignore: no_leading_underscores_for_local_identifiers
       final _indicators = indicators;
 
       Widget? indicator;
@@ -148,17 +147,6 @@ class Timeline extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: tileLineItems,
     );
-    // return ListView.separated(
-    //   padding: padding,
-    //   separatorBuilder: (_, __) => SizedBox(height: itemGap),
-    //   physics: physics,
-    //   shrinkWrap: shrinkWrap,
-    //   itemCount: itemCount,
-    //   controller: controller,
-    //   reverse: reverse,
-    //   primary: primary,
-    //   itemBuilder: (context, index) {},
-    // );
   }
 }
 
@@ -218,12 +206,6 @@ class _TimelinePainter extends CustomPainter {
 
     if (!isFirst) canvas.drawLine(top, centerTop, linePaint);
     if (!isLast) canvas.drawLine(centerBottom, bottom, linePaint);
-
-    // if (!hideDefaultIndicator) {
-    //   final Offset offsetCenter = size.centerLeft(Offset(indicatorRadius, 0));
-
-    //   canvas.drawCircle(offsetCenter, indicatorRadius, circlePaint);
-    // }
   }
 
   @override

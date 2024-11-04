@@ -13,7 +13,9 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemLis
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Provider/LoadingSaveAggotaPenelitiState.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
+import 'package:sipaksi/Module/Shared/DefaultState.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
+import 'package:sipaksi/Module/Shared/LoadingManager.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:sipaksi/Module/Shared/constant.dart';
 
@@ -52,7 +54,7 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
-                      onPressed: () => !loadingState.isLoadingSave.value
+                      onPressed: () => !loadingState.isLoadingSave
                           ? Navigator.of(context).pop()
                           : null,
                     );
@@ -129,6 +131,8 @@ class _ContentState extends State<Content> {
   Widget build(BuildContext context) {
     Debouncer _debouncer = Debouncer(milliseconds: 500);
     final loadingState = Provider.of<LoadingSaveAggotaPenelitiState>(context);
+    LoadingManager loadingManager =
+        LoadingManager(DefaultState(loadingState.isLoadingSave));
 
     return Column(
       children: [
@@ -206,13 +210,17 @@ class _ContentState extends State<Content> {
           ),
         ),
         FooterAction(
-          isLoading: loadingState.isLoadingSave,
+          isLoading: loadingManager.stateLoading,
           optionalBuilder: (height) => SizedBox.shrink(),
           onPress: (double height) {
-            if (!loadingState.isLoadingSave.value) {
-              loadingState.isLoadingSave.value = true;
+            if (!loadingState.isLoadingSave) {
+              setState(() {
+                loadingState.setLoading(true);
+              });
               Future.delayed(const Duration(seconds: 2), () {
-                loadingState.isLoadingSave.value = false;
+                setState(() {
+                  loadingState.setLoading(false);
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Data berhasil disimpan!'),

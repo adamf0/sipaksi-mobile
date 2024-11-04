@@ -26,7 +26,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void dispose() {
-    // innerCarouselController.dispose(); // Dispose the controller if needed
     super.dispose();
   }
 

@@ -178,14 +178,10 @@ class _DropdownSearchState extends State<DropdownSearch> {
                                   var selected = filtered[index];
                                   bool isDisabled = filter == selected.key;
 
-                                  // print(
-                                  //     "Filter $filter; selected: ${selected.text}; disabled: ${isDisabled ? 'y' : 'n'}");
-
                                   return GestureDetector(
                                     onTap: () {
                                       if (!isDisabled) {
                                         widget.badgesNotifier.value = [
-                                          // ...widget.badgesNotifier.value,
                                           selected,
                                         ];
                                         widget.eventChange?.call();

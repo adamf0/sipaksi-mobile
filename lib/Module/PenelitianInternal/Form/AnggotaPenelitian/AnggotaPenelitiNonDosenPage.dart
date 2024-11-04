@@ -17,11 +17,14 @@ import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/ItemLis
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/Provider/LoadingSaveAggotaPenelitiState.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
+import 'package:sipaksi/Module/Shared/DefaultState.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
 import 'package:sipaksi/Module/Helpers/Utility.dart';
+import 'package:sipaksi/Module/Shared/LoadingManager.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:sipaksi/Module/Shared/constant.dart';
 
+//masih gagal di satte bedain state hapus dan simpan
 class AnggotaPenelitiNonDosenPage extends StatefulWidget {
   const AnggotaPenelitiNonDosenPage({super.key});
 
@@ -58,7 +61,7 @@ class _AnggotaPenelitiNonDosenPageState
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
-                      onPressed: () => !loadingState.isLoadingSave.value
+                      onPressed: () => !loadingState.isLoadingSave
                           ? Navigator.of(context).pop()
                           : null,
                     );
@@ -142,6 +145,8 @@ class _ContentState extends State<Content> {
   Widget build(BuildContext context) {
     Debouncer _debouncer = Debouncer(milliseconds: 500);
     final loadingState = Provider.of<LoadingSaveAggotaPenelitiState>(context);
+    LoadingManager loadingManager =
+        LoadingManager(DefaultState(loadingState.isLoadingSave));
 
     return Column(
       children: [
@@ -251,40 +256,64 @@ class _ContentState extends State<Content> {
           ),
         ),
         FooterAction(
-          isLoading: loadingState.isLoadingSave,
-          optionalBuilder: (height) =>
-              getListSelected().isNotEmpty || loadingState.isLoadingSave.value
-                  ? TextButton(
-                      onPressed: () {
-                        !loadingState.isLoadingSave.value
-                            ? ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text('Data berhasil hapus!'),
-                                  duration: const Duration(seconds: 2),
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: EdgeInsets.only(
-                                    left: 8,
-                                    right: 8,
-                                    bottom: height + 8,
-                                  ),
-                                ),
-                              )
-                            : null;
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                      child: const Text(
-                        'Hapus',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    )
-                  : SizedBox.shrink(),
+          isLoading: loadingManager.stateLoading,
+          optionalBuilder: (height) {
+            if (loadingState.isLoadingSave) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              );
+            } else if (!loadingState.isLoadingSave &&
+                getListSelected().isNotEmpty) {
+              return TextButton(
+                onPressed: () {
+                  if (!loadingState.isLoadingSave) {
+                    setState(() {
+                      loadingState.setLoading(true);
+                    });
+                    Future.delayed(const Duration(seconds: 2), () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Data berhasil dihapus!'),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.only(
+                            left: 8,
+                            right: 8,
+                            bottom: height + 8,
+                          ),
+                        ),
+                      );
+                      // .closed
+                      // .then((_) => Navigator.of(context).pop());
+                      setState(() {
+                        loadingState.setLoading(false);
+                      });
+                    });
+                  }
+                  // print("footerHeight: ${height.toString()}");
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: const Text(
+                  'Hapus',
+                  style: TextStyle(fontSize: 14),
+                ),
+              );
+            }
+
+            return SizedBox.shrink();
+          },
           onPress: (double height) {
-            if (!loadingState.isLoadingSave.value) {
-              loadingState.isLoadingSave.value = true;
+            if (!loadingState.isLoadingSave) {
+              setState(() {
+                loadingState.setLoading(true);
+              });
               Future.delayed(const Duration(seconds: 2), () {
-                loadingState.isLoadingSave.value = false;
+                setState(() {
+                  loadingState.setLoading(false);
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Data berhasil disimpan!'),

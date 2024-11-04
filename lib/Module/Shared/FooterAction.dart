@@ -11,7 +11,7 @@ class FooterAction extends StatelessWidget {
 
   final Function(double height) onPress;
   final Widget Function(double height) optionalBuilder;
-  final ValueNotifier<bool> isLoading;
+  final bool isLoading;
   final bool buttonHide;
 
   double getWrapHeight(BuildContext context) {
@@ -21,6 +21,7 @@ class FooterAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('loadingState.isLoadingSave.value : ${isLoading ? 'y' : 'n'}');
     return Container(
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       width: double.infinity,
@@ -29,30 +30,53 @@ class FooterAction extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           optionalBuilder(getWrapHeight(context)),
-          ValueListenableBuilder(
-            valueListenable: isLoading,
-            builder: (context, loading, child) {
-              return loading
+          isLoading && !buttonHide
+              ? (!buttonHide
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CircularProgressIndicator(),
                     )
-                  : (!buttonHide
-                      ? TextButton(
-                          onPressed: () {
-                            onPress(getWrapHeight(context));
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.black,
-                          ),
-                          child: const Text(
-                            'Simpan',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        )
-                      : SizedBox.shrink());
-            },
-          ),
+                  : SizedBox.shrink())
+              : (!buttonHide
+                  ? TextButton(
+                      onPressed: () {
+                        onPress(getWrapHeight(context));
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        'Simpan',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    )
+                  : SizedBox.shrink())
+          // ValueListenableBuilder(
+          //   valueListenable: isLoading,
+          //   builder: (context, loading, child) {
+          //     return loading && !buttonHide
+          //         ? (!buttonHide
+          //             ? Padding(
+          //                 padding: const EdgeInsets.all(8.0),
+          //                 child: CircularProgressIndicator(),
+          //               )
+          //             : SizedBox.shrink())
+          //         : (!buttonHide
+          //             ? TextButton(
+          //                 onPressed: () {
+          //                   onPress(getWrapHeight(context));
+          //                 },
+          //                 style: TextButton.styleFrom(
+          //                   foregroundColor: Colors.black,
+          //                 ),
+          //                 child: const Text(
+          //                   'Simpan',
+          //                   style: TextStyle(fontSize: 14),
+          //                 ),
+          //               )
+          //             : SizedBox.shrink());
+          //   },
+          // ),
         ],
       ),
     );

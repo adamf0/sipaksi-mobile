@@ -130,8 +130,6 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
           ),
           ItemsTimeline(
             title: NameTimeline.step3_2.title,
-            // description:
-            //     "pada tahap ini anda harus menyetor data daftar mahasiswa unpak yang ikut dalam penelitian ini",
             required: true,
             isDone: true,
             action: () {},

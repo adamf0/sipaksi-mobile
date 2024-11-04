@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class LoadingSaveAggotaPenelitiState with ChangeNotifier {
-  ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  bool _isLoading = false;
 
-  ValueNotifier<bool> get isLoadingSave => _isLoading;
+  bool get isLoadingSave => _isLoading;
 
   void setLoading(bool loading) {
-    _isLoading.value = loading;
+    _isLoading = loading;
     notifyListeners();
   }
 }

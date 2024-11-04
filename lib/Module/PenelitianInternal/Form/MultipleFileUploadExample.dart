@@ -40,7 +40,7 @@ class _MultipleFileUploadExampleState extends State<MultipleFileUploadExample>
       allowedExtensions: FileTypeGroup.getExtensions([
         FileTypeGroup.image,
         FileTypeGroup.document,
-      ]), // Add your allowed extensions
+      ]),
     );
 
     if (result != null && result.files.isNotEmpty) {
@@ -64,15 +64,14 @@ class _MultipleFileUploadExampleState extends State<MultipleFileUploadExample>
         uploadFutures.add(_uploadFile(file, i));
       }
 
-      await Future.wait(uploadFutures); // Wait for all uploads to complete
+      await Future.wait(uploadFutures);
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('All files successfully uploaded!')));
     }
   }
 
   Future<void> _uploadFile(PlatformFile file, int index) async {
-    _uploadingStates[index] =
-        true; // Set the uploading state to true for this file
+    _uploadingStates[index] = true;
     Dio dio = Dio();
     FormData formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(file.path!, filename: file.name),
@@ -82,16 +81,14 @@ class _MultipleFileUploadExampleState extends State<MultipleFileUploadExample>
       await dio.post('https://your-api-endpoint.com/upload', data: formData,
           onSendProgress: (sent, total) {
         setState(() {
-          _uploadProgresses[index] =
-              sent / total; // Update progress for this specific file
+          _uploadProgresses[index] = sent / total;
         });
       });
     } catch (e) {
       print('Upload failed for ${file.name}: $e');
     } finally {
       setState(() {
-        _uploadingStates[index] =
-            false; // Reset uploading state after completion
+        _uploadingStates[index] = false;
       });
     }
   }

@@ -14,15 +14,3 @@ class CommandInvoker {
     }
   }
 }
-
-// final commandInvoker = CommandInvoker({
-//   "edit": EditCommand(),
-//   "delete": DeleteCommand(),
-//   "approve_member": ApproveMemberCommand(),
-//   "reject_member": RejectMemberCommand(),
-// });
-
-// // Usage
-// commandInvoker.executeCommand(value, context, params: {
-//   'someKey': 'someValue',
-// });

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomBadge extends StatelessWidget {
-  final String label; // Define a label parameter
-  final VoidCallback? onRemove; // Callback for removing the Custombadge
+  final String label;
+  final VoidCallback? onRemove;
 
   const CustomBadge({
     super.key,
-    required this.label, // Make label required
-    this.onRemove, // Optional callback
+    required this.label,
+    this.onRemove,
   });
 
   @override
@@ -33,7 +33,7 @@ class CustomBadge extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (onRemove != null) {
-                onRemove!(); // Call the onRemove callback if it's provided
+                onRemove!();
               }
             },
             child: const Icon(

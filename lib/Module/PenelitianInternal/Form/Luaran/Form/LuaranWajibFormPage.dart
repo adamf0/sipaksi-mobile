@@ -1,8 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sipaksi/Components/DropdownSearch/DropdownItems.dart';
 import 'package:sipaksi/Components/DropdownSearch/DropdownSearch.dart';
+import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
+import 'package:sipaksi/Module/PenelitianInternal/Form/Luaran/Form/Provider/LoadingSaveLuaranWajibFormState.dart';
+import 'package:sipaksi/Module/PenelitianInternal/NameTimeline.dart';
+import 'package:sipaksi/Module/Shared/DefaultState.dart';
 import 'package:sipaksi/Module/Shared/FooterAction.dart';
+import 'package:sipaksi/Module/Shared/LoadingManager.dart';
+import 'package:sipaksi/Module/Shared/Module.dart';
+import 'package:sipaksi/Module/Shared/constant.dart';
 
 class LuaranWajibFormPage extends StatefulWidget {
   const LuaranWajibFormPage({super.key});
@@ -12,13 +20,100 @@ class LuaranWajibFormPage extends StatefulWidget {
 }
 
 class _LuaranWajibFormPageState extends State<LuaranWajibFormPage> {
+  @override
+  Widget build(BuildContext context) {
+    Size size;
+    double height, width;
+
+    size = MediaQuery.of(context).size;
+    width = size.width;
+    height = size.height;
+    Module current = Module.penelitian_internal;
+
+    return ChangeNotifierProvider(
+      create: (context) => LoadingSaveLuaranWajibFormState(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: LayoutBuilder(
+            builder: (context, constraints) {
+              final loadingState =
+                  Provider.of<LoadingSaveLuaranWajibFormState>(context);
+
+              return constraints.maxWidth >= 768
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => !loadingState.isLoadingSave
+                          ? Navigator.of(context).pop()
+                          : null,
+                    );
+            },
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Hero(
+            tag: NameTimeline.step4_2.title,
+            child: Text(
+              NameTimeline.step4_2.title,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth > 768) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Sidebar.createSidebar(
+                      context: context,
+                      height: height,
+                      list: ListItemsSidebar(current),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Content(
+                      width: width,
+                      height: height,
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return Content(
+                width: width,
+                height: height,
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class Content extends StatefulWidget {
+  const Content({super.key, required this.width, required this.height});
+
+  final double width, height;
+
+  @override
+  State<Content> createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
   final ValueNotifier<List<DropdownItems>> badgesKategori = ValueNotifier([]);
   final ValueNotifier<List<DropdownItems>> filteredKategori = ValueNotifier([]);
 
   final ValueNotifier<List<DropdownItems>> badgesLuaran = ValueNotifier([]);
   final ValueNotifier<List<DropdownItems>> filteredLuaran = ValueNotifier([]);
 
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
   final TextEditingController _statusController = TextEditingController();
   String status = "";
 
@@ -30,275 +125,257 @@ class _LuaranWajibFormPageState extends State<LuaranWajibFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size;
-    double height, width;
+    final loadingState = Provider.of<LoadingSaveLuaranWajibFormState>(context);
+    LoadingManager loadingManager =
+        LoadingManager(DefaultState(loadingState.isLoadingSave));
 
-    size = MediaQuery.of(context).size;
-    width = size.width;
-    height = size.height;
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () =>
-              !isLoading.value ? Navigator.of(context).pop() : null,
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Tambah Luaran Wajib",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Kategori",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
-                      ),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Kategori",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    DropdownSearch(
-                      badgesNotifier: badgesKategori,
-                      filteredNotifier: filteredKategori,
-                      fetchUsers: (query) async {
-                        await _fetchData(query, filteredKategori);
-                      },
+                  ),
+                  DropdownSearch(
+                    badgesNotifier: badgesKategori,
+                    filteredNotifier: filteredKategori,
+                    fetchUsers: (query) async {
+                      await _fetchData(query, filteredKategori);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Luaran",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Luaran",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                  ),
+                  DropdownSearch(
+                    badgesNotifier: badgesLuaran,
+                    filteredNotifier: filteredLuaran,
+                    fetchUsers: (query) async {
+                      await _fetchData(query, filteredLuaran);
+                    },
+                    eventChange: () {
+                      if (badgesLuaran.value.isNotEmpty) {
+                        _statusController.text =
+                            badgesLuaran.value.first.extra.toString();
+                      } else {
+                        _statusController.text = "";
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Status",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    DropdownSearch(
-                      badgesNotifier: badgesLuaran,
-                      filteredNotifier: filteredLuaran,
-                      fetchUsers: (query) async {
-                        await _fetchData(query, filteredLuaran);
-                      },
-                      eventChange: () {
-                        if (badgesLuaran.value.isNotEmpty) {
-                          _statusController.text =
-                              badgesLuaran.value.first.extra.toString();
-                        } else {
-                          _statusController.text = "";
-                        }
-                      },
+                  ),
+                  TextField(
+                    controller: _statusController,
+                    // enabled: false,
+                    keyboardType: TextInputType.text,
+                    obscureText: false,
+                    onChanged: (value) => {},
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.outline,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Status",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    TextField(
-                      controller: _statusController,
-                      // enabled: false,
-                      keyboardType: TextInputType.text,
-                      obscureText: false,
-                      onChanged: (value) => {},
-                      textInputAction: TextInputAction.next,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                      decoration: InputDecoration(
-                        hintStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.outline),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 6),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 1,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Keterangan",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    TextField(
-                      // controller: widget.controller,
-                      keyboardType: TextInputType.text,
-                      obscureText: false, // Negate the value
-                      onChanged: (value) => {},
-                      textInputAction: TextInputAction.next,
-                      maxLines: 1,
-                      style: TextStyle(
+                    decoration: InputDecoration(
+                      hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.outline),
-                      decoration: InputDecoration(
-                        errorText: "belum diisi",
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.outline),
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                          width: 1,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor, width: 2),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                          width: 2,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: Colors.red, width: 1),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: Colors.red, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                          width: 1,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Link",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Keterangan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    TextField(
-                      // controller: widget.controller,
-                      keyboardType: TextInputType.url,
-                      obscureText: false, // Negate the value
-                      onChanged: (value) => {},
-                      textInputAction: TextInputAction.next,
-                      maxLines: 1,
-                      style: TextStyle(
+                  ),
+                  TextField(
+                    // controller: widget.controller,
+                    keyboardType: TextInputType.text,
+                    obscureText: false, // Negate the value
+                    onChanged: (value) => {},
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.outline),
+                    decoration: InputDecoration(
+                      errorText: "belum diisi",
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.outline),
-                      decoration: InputDecoration(
-                        errorText: "belum diisi",
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.outline),
-                        labelStyle:
-                            TextStyle(color: Theme.of(context).primaryColor),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor, width: 2),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: Colors.red, width: 1),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: Colors.red, width: 2),
-                        ),
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 1),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Link",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  TextField(
+                    // controller: widget.controller,
+                    keyboardType: TextInputType.url,
+                    obscureText: false, // Negate the value
+                    onChanged: (value) => {},
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.outline),
+                    decoration: InputDecoration(
+                      errorText: "belum diisi",
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.outline),
+                      labelStyle:
+                          TextStyle(color: Theme.of(context).primaryColor),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 1),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
             ),
           ),
-          FooterAction(
-            isLoading: isLoading,
-            optionalBuilder: (height) => SizedBox.shrink(),
-            onPress: (double height) {
-              if (!isLoading.value) {
-                isLoading.value = true;
-                Future.delayed(const Duration(seconds: 2), () {
-                  isLoading.value = false;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(
-                        SnackBar(
-                          content: const Text('Data berhasil disimpan!'),
-                          duration: const Duration(seconds: 2),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.only(
-                            left: 8,
-                            right: 8,
-                            bottom: height + 8,
-                          ),
-                        ),
-                      )
-                      .closed
-                      .then((_) => Navigator.of(context).pop());
+        ),
+        FooterAction(
+          isLoading: loadingManager.stateLoading,
+          optionalBuilder: (height) => SizedBox.shrink(),
+          onPress: (double height) {
+            if (!loadingManager.stateLoading) {
+              setState(() {
+                loadingState.setLoading(true);
+              });
+              Future.delayed(const Duration(seconds: 2), () {
+                setState(() {
+                  loadingState.setLoading(false);
                 });
-              }
-              print("footerHeight: ${height.toString()}");
-            },
-          ),
-        ],
-      ),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Data berhasil disimpan!'),
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      bottom: height + 8,
+                    ),
+                  ),
+                );
+                // .closed
+                // .then((_) => Navigator.of(context).pop());
+              });
+            }
+            print("footerHeight: ${height.toString()}");
+          },
+        ),
+      ],
     );
   }
 }
