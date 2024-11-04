@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sipaksi/Components/Notification/SmallCircleNotification.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Status.dart';
 
 class PopmenuItemsFactory {
@@ -13,6 +14,16 @@ class PopmenuItemsFactory {
       return [
         const PopupMenuItem(value: 'edit', child: Text('Edit')),
         const PopupMenuItem(value: 'delete', child: Text('Delete')),
+        PopupMenuItem(
+          value: 'Notifikasi',
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Notifikasi'),
+              SmallCircleNotification(),
+            ],
+          ),
+        ),
       ];
     } else if (type == Status.menunggu_anggota.key) {
       return [

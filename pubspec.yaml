@@ -50,6 +50,7 @@ dependencies:
   flutter_breadcrumb: ^1.0.1
   provider: ^6.0.0
   auto_size_text: ^3.0.0
+  awesome_ripple_animation: ^2.0.0
   
 dev_dependencies:
   flutter_test:

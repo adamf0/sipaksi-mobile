@@ -1,10 +1,12 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:io';
 
+import 'package:awesome_ripple_animation/awesome_ripple_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
+import 'package:sipaksi/Components/Notification/SmallCircleNotification.dart';
 import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
 import 'package:sipaksi/Module/Abstraction/CommandInvoker.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Event/DeleteCommand.dart';
@@ -326,7 +328,25 @@ class ItemsListview extends StatelessWidget {
             ),
             (factory.getList.isNotEmpty
                 ? PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
+                    icon: Stack(
+                      children: [
+                        Icon(Icons.more_vert),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: RippleAnimation(
+                            size: Size(10, 10),
+                            key: UniqueKey(),
+                            repeat: true,
+                            color: Colors.red,
+                            minRadius: 10,
+                            ripplesCount: 1,
+                            duration: Duration(milliseconds: 2300),
+                            child: SmallCircleNotification(),
+                          ),
+                        )
+                      ],
+                    ),
                     itemBuilder: (context) {
                       return factory.getList;
                     },
