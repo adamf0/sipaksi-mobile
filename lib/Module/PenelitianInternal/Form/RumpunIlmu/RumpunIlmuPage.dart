@@ -175,7 +175,7 @@ class _ContentState extends State<Content> {
                                     ),
                                     ItemStepCreadCrumb(
                                       title: NameTimeline.step2_2.title,
-                                      onTap: () => {},
+                                      onTap: null,
                                     ),
                                   ]),
                             )

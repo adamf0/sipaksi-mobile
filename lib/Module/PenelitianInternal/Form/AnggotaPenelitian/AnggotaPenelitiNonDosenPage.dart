@@ -186,7 +186,7 @@ class _ContentState extends State<Content> {
                                     ),
                                     ItemStepCreadCrumb(
                                       title: NameTimeline.step3_3.title,
-                                      onTap: () => {},
+                                      onTap: null,
                                     ),
                                   ]),
                             )
@@ -305,30 +305,8 @@ class _ContentState extends State<Content> {
 
             return SizedBox.shrink();
           },
-          onPress: (double height) {
-            if (!loadingState.isLoadingSave) {
-              setState(() {
-                loadingState.setLoading(true);
-              });
-              Future.delayed(const Duration(seconds: 2), () {
-                setState(() {
-                  loadingState.setLoading(false);
-                });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Data berhasil disimpan!'),
-                    duration: const Duration(seconds: 2),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.only(
-                      left: 8,
-                      right: 8,
-                      bottom: height + 8,
-                    ),
-                  ),
-                );
-              });
-            }
-          },
+          buttonHide: true,
+          onPress: (double height) {},
         ),
       ],
     );

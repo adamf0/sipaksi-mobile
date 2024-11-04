@@ -4,7 +4,7 @@ import 'package:flutter_breadcrumb/flutter_breadcrumb.dart';
 class ItemStepCreadCrumb {
   final IconData? icon;
   final String? title;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   ItemStepCreadCrumb({this.icon, this.title, required this.onTap});
 }
@@ -28,7 +28,9 @@ class StepBreadCrumb {
                   style: TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: 'Manrope',
-                    color: Colors.black,
+                    color: item.onTap == null
+                        ? Colors.black
+                        : Theme.of(context).colorScheme.primary,
                   ),
                 ),
           onTap: item.onTap,
