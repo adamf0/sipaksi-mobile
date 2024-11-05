@@ -142,7 +142,7 @@ class Content extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth > 768) {
+        if (constraints.maxWidth >= 768) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

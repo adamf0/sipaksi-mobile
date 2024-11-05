@@ -64,7 +64,7 @@ class _RabFormPageState extends State<RabFormPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth > 768) {
+            if (constraints.maxWidth >= 768) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
