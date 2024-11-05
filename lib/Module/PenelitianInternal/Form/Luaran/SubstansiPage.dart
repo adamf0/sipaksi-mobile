@@ -44,7 +44,7 @@ class _SubstansiPageState extends State<SubstansiPage> {
               final loadingState =
                   Provider.of<LoadingSaveSubstansiState>(context);
 
-              return constraints.maxWidth >= 768
+              return constraints.maxWidth >= 640
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -69,7 +69,7 @@ class _SubstansiPageState extends State<SubstansiPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 768) {
+            if (constraints.maxWidth >= 640) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

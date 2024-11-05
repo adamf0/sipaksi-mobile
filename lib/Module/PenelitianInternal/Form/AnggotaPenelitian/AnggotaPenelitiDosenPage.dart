@@ -47,7 +47,7 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
               final loadingState =
                   Provider.of<LoadingSaveAggotaPenelitiState>(context);
 
-              return constraints.maxWidth >= 768
+              return constraints.maxWidth >= 640
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -72,7 +72,7 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 768) {
+            if (constraints.maxWidth >= 640) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -145,7 +145,7 @@ class _ContentState extends State<Content> {
                 children: [
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      return constraints.maxWidth >= 768
+                      return constraints.maxWidth >= 640
                           ? Container(
                               margin: EdgeInsets.symmetric(
                                 vertical: widget.height * 0.02,

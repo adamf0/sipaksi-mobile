@@ -129,7 +129,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildCards(double height) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 768) {
+        if (constraints.maxWidth < 640) {
           // For mobile: Use a single column layout
           return Column(
             children: [
@@ -159,7 +159,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   double _getMenuHeight(double height, double maxWidth) {
-    return maxWidth >= 768 ? height * .2 : height * .15;
+    return maxWidth >= 640 ? height * .2 : height * .15;
   }
 }
 
@@ -242,7 +242,7 @@ class _DashboardPageState extends State<DashboardPage> {
 //           body: SingleChildScrollView(
 //             child: LayoutBuilder(
 //               builder: (context, constraints) {
-//                 if (constraints.maxWidth >= 768) {
+//                 if (constraints.maxWidth >= 640) {
 //                   return Container(
 //                     margin: EdgeInsets.fromLTRB(
 //                       .03.sw,
@@ -377,7 +377,7 @@ class BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 768) {
+        if (constraints.maxWidth >= 640) {
           return SizedBox.shrink(); // Return an empty widget for wider screens
         }
 
@@ -424,7 +424,7 @@ class BottomNav extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     return LayoutBuilder(
 //       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 768) {
+//         if (constraints.maxWidth >= 640) {
 //           return SizedBox.shrink();
 //         } else {
 //           return BottomAppBar(
@@ -467,7 +467,7 @@ class ButtonQuestion extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 768) {
+        if (constraints.maxWidth < 640) {
           return FloatingActionButton(
             onPressed: () {},
             backgroundColor: Theme.of(context).primaryColor,
@@ -495,7 +495,7 @@ class ButtonQuestion extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     return LayoutBuilder(
 //       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 768) {
+//         if (constraints.maxWidth >= 640) {
 //           return SizedBox.shrink();
 //         } else {
 //           return FloatingActionButton(
@@ -753,7 +753,7 @@ class Menus extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 768) {
+        if (constraints.maxWidth >= 640) {
           // Desktop layout
           return Container(
             height: height,
@@ -820,7 +820,7 @@ class Menus extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     return LayoutBuilder(
 //       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 768) {
+//         if (constraints.maxWidth >= 640) {
 //           return Container(
 //             height: height,
 //             child: ListView(
@@ -1061,7 +1061,7 @@ class Header extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(child: userInfo),
-            if (constraints.maxWidth >= 768)
+            if (constraints.maxWidth >= 640)
               Row(children: actionButtons)
             else
               Row(children: [actionButtons.first]),
@@ -1088,7 +1088,7 @@ class Header extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     return LayoutBuilder(
 //       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 768) {
+//         if (constraints.maxWidth >= 640) {
 //           return Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: [

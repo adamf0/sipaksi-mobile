@@ -39,7 +39,7 @@ class _LuaranWajibFormPageState extends State<LuaranWajibFormPage> {
               final loadingState =
                   Provider.of<LoadingSaveLuaranWajibFormState>(context);
 
-              return constraints.maxWidth >= 768
+              return constraints.maxWidth >= 640
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -64,7 +64,7 @@ class _LuaranWajibFormPageState extends State<LuaranWajibFormPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 768) {
+            if (constraints.maxWidth >= 640) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

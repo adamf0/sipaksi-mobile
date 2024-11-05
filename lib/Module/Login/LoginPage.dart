@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return constraints.maxWidth >= 768
+          return constraints.maxWidth >= 640
               ? Row(
                   children: [
                     Expanded(
@@ -251,7 +251,7 @@ class SectionLogin extends StatelessWidget {
 //       resizeToAvoidBottomInset: false,
 //       body: LayoutBuilder(
 //         builder: (context, constraints) {
-//           if (constraints.maxWidth >= 768) {
+//           if (constraints.maxWidth >= 640) {
 //             // Tablet/Desktop layout
 //             return Row(
 //               children: [

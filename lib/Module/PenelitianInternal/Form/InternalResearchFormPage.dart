@@ -302,7 +302,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         appBar: AppBar(
           leading: LayoutBuilder(
             builder: (context, constraints) {
-              return constraints.maxWidth >= 768
+              return constraints.maxWidth >= 640
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -325,7 +325,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 768) {
+            if (constraints.maxWidth >= 640) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -447,7 +447,7 @@ class Content extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         List<Widget> x = [];
-        if (constraints.maxWidth >= 768) {
+        if (constraints.maxWidth >= 640) {
           x.add(
             StepBreadCrumb.createBreadCrumb(context: context, list: [
               ItemStepCreadCrumb(

@@ -91,7 +91,7 @@ class _InternalResearchCatalogPageState
       appBar: AppBar(
         leading: LayoutBuilder(
           builder: (context, constraints) {
-            return constraints.maxWidth >= 768
+            return constraints.maxWidth >= 640
                 ? SizedBox.shrink()
                 : IconButton(
                     icon: const Icon(
@@ -142,7 +142,7 @@ class Content extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 768) {
+        if (constraints.maxWidth >= 640) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
