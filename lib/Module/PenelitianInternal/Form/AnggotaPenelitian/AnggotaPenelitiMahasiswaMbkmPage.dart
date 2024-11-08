@@ -62,12 +62,9 @@ class _AnggotaPenelitiMahasiswaMbkmPageState
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step3_2_2.title,
-            child: Text(
-              NameTimeline.step3_2_2.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step3_2_2.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

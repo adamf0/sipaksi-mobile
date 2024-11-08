@@ -53,12 +53,9 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step1_1.title,
-            child: Text(
-              NameTimeline.step1_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step1_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

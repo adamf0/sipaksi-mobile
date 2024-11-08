@@ -4,7 +4,7 @@ enum Module {
       'penelitian nasional', "Hibah Penelitian Kemendikbud Ristek"),
   pkm_internal('pkm internal', "PKM Internal"),
   pkm_nasional('pkm nasional', "PKM Kemendikbud ristek"),
-  ppm('ppm', "Penelitian dan Pengabdian Masyarakat Lainnya / Internasional"),
+  ppm('ppm', "PPM Lainnya / Internasional"),
   menunggu_anggota('menunggu_anggota', "Menunggu Verifikasi Anggota"),
   insentif('insentif', "Insentif"),
   notifikasi('notifikasi', "Notifikasi"),

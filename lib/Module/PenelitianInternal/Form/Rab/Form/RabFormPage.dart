@@ -53,12 +53,9 @@ class _RabFormPageState extends State<RabFormPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step5_1.title,
-            child: Text(
-              NameTimeline.step5_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step5_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

@@ -58,12 +58,9 @@ class _SubstansiPageState extends State<SubstansiPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step4_1.title,
-            child: Text(
-              NameTimeline.step4_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step4_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

@@ -25,10 +25,11 @@ class Sidebar {
         physics: const BouncingScrollPhysics(),
         children: list
             .map((item) => ListTile(
+                  visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                   title: Text(
                     item.title,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       fontFamily: 'Manrope',
                       color: item.active

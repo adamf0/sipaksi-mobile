@@ -60,12 +60,9 @@ class _SkemaPenelitianPageState extends State<SkemaPenelitianPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step1_2.title,
-            child: Text(
-              NameTimeline.step1_2.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step1_2.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

@@ -66,12 +66,9 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step6_1.title,
-            child: Text(
-              NameTimeline.step6_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step6_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

@@ -54,12 +54,9 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step2_1.title,
-            child: Text(
-              NameTimeline.step2_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step2_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

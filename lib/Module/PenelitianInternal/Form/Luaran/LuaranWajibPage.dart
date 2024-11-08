@@ -60,12 +60,9 @@ class _LuaranWajibPageState extends State<LuaranWajibPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step4_2.title,
-            child: Text(
-              NameTimeline.step4_2.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step4_2.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

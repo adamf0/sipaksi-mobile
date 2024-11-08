@@ -68,12 +68,9 @@ class _AnggotaPenelitiNonDosenPageState
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step3_3.title,
-            child: Text(
-              NameTimeline.step3_3.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step3_3.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

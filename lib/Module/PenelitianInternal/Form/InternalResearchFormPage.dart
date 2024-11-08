@@ -317,12 +317,9 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: Module.penelitian_internal.value,
-            child: Text(
-              Module.penelitian_internal.value,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            Module.penelitian_internal.value,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,
@@ -488,6 +485,7 @@ class _ContentState extends State<Content> {
               ),
             ]),
           );
+          x.add(SizedBox(height: 10));
         }
 
         print('current level: ${prefs?.getString('level')}');
@@ -914,33 +912,30 @@ class Section extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Hero(
-                  tag: title,
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: title,
-                          style: TextStyle(
-                            fontSize: 14,
-                            decoration:
-                                isDone ? TextDecoration.lineThrough : null,
-                            fontWeight: FontWeight.w300,
-                            color: isDone
-                                ? Theme.of(context).colorScheme.secondary
-                                : Theme.of(context).colorScheme.tertiary,
-                          ),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          decoration:
+                              isDone ? TextDecoration.lineThrough : null,
+                          fontWeight: FontWeight.w300,
+                          color: isDone
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.tertiary,
                         ),
-                        TextSpan(
-                          text: required ? " *" : "",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                      ),
+                      TextSpan(
+                        text: required ? " *" : "",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).colorScheme.error,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

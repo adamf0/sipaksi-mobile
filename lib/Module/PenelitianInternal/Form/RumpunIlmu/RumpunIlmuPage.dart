@@ -56,12 +56,9 @@ class _RumpunIlmuPageState extends State<RumpunIlmuPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step2_2.title,
-            child: Text(
-              NameTimeline.step2_2.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step2_2.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

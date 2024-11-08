@@ -104,5 +104,19 @@ List<ItemSidebar> ListItemsSidebar(BuildContext context, Module current) {
         // }
       },
     ),
+    ItemSidebar(
+      title: Module.notifikasi.value,
+      active: current == Module.notifikasi,
+      onTap: () {
+        // if (current != Module.insentif) {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const PPMCatalogPage(),
+        //     ),
+        //   );
+        // }
+      },
+    ),
   ];
 }

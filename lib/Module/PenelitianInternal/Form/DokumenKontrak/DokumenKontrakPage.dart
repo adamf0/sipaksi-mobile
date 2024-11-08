@@ -66,12 +66,9 @@ class _DokumenKontrakPageState extends State<DokumenKontrakPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step7_1.title,
-            child: Text(
-              NameTimeline.step7_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step7_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,

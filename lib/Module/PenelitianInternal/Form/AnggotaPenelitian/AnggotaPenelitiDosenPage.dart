@@ -61,12 +61,9 @@ class _AnggotaPenelitiDosenPageState extends State<AnggotaPenelitiDosenPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Hero(
-            tag: NameTimeline.step3_1.title,
-            child: Text(
-              NameTimeline.step3_1.title,
-              style: TextStyle(color: Colors.white),
-            ),
+          title: Text(
+            NameTimeline.step3_1.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
         backgroundColor: Colors.white,
