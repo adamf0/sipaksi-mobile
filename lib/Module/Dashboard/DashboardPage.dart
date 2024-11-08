@@ -9,7 +9,7 @@ import 'package:sipaksi/Components/Notification/SmallCircleNotification.dart';
 import 'package:sipaksi/Components/Popmenu/Event/LogoutCommand.dart';
 import 'package:sipaksi/Module/Dashboard/Provider/LevelState.dart';
 import 'package:sipaksi/Module/Dashboard/TypeSubmission.dart';
-import 'package:sipaksi/Module/Notification/NotificationPage.dart';
+import 'package:sipaksi/Module/Notification/List/NotificationPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/InternalResearchCatalogPage.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:url_launcher/url_launcher.dart';

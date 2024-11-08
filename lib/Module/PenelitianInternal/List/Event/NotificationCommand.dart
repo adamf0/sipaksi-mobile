@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Module/Abstraction/Command.dart';
-import 'package:sipaksi/Module/Notification/NotificationPage.dart';
+import 'package:sipaksi/Module/Notification/List/NotificationPage.dart';
 
 class NotificationCommand implements Command {
   @override
