@@ -53,9 +53,13 @@ class _JudulTahunUsulanPageState extends State<JudulTahunUsulanPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            NameTimeline.step1_1.title,
-            style: TextStyle(color: Colors.white),
+          title: LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 540
+                ? SizedBox.shrink()
+                : Text(
+                    NameTimeline.step1_1.title,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
         backgroundColor: Colors.white,

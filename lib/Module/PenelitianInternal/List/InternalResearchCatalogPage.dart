@@ -86,9 +86,13 @@ class _InternalResearchCatalogPageState
           },
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          Module.penelitian_internal.value,
-          style: TextStyle(color: Colors.white),
+        title: LayoutBuilder(
+          builder: (context, constraints) => constraints.maxWidth >= 540
+              ? SizedBox.shrink()
+              : Text(
+                  Module.penelitian_internal.value,
+                  style: TextStyle(color: Colors.white),
+                ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

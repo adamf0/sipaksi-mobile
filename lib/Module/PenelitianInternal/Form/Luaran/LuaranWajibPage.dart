@@ -60,9 +60,13 @@ class _LuaranWajibPageState extends State<LuaranWajibPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            NameTimeline.step4_2.title,
-            style: TextStyle(color: Colors.white),
+          title: LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 540
+                ? SizedBox.shrink()
+                : Text(
+                    NameTimeline.step4_2.title,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
         backgroundColor: Colors.white,

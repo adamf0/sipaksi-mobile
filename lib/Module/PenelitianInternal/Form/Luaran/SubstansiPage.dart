@@ -58,9 +58,13 @@ class _SubstansiPageState extends State<SubstansiPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            NameTimeline.step4_1.title,
-            style: TextStyle(color: Colors.white),
+          title: LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 540
+                ? SizedBox.shrink()
+                : Text(
+                    NameTimeline.step4_1.title,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
         backgroundColor: Colors.white,

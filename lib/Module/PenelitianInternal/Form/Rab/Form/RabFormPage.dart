@@ -53,9 +53,13 @@ class _RabFormPageState extends State<RabFormPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            NameTimeline.step5_1.title,
-            style: TextStyle(color: Colors.white),
+          title: LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 540
+                ? SizedBox.shrink()
+                : Text(
+                    NameTimeline.step5_1.title,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
         backgroundColor: Colors.white,

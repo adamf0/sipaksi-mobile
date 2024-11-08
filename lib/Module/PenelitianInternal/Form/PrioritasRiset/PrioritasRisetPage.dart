@@ -54,9 +54,13 @@ class _PrioritasRisetPageState extends State<PrioritasRisetPage> {
             },
           ),
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            NameTimeline.step2_1.title,
-            style: TextStyle(color: Colors.white),
+          title: LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 540
+                ? SizedBox.shrink()
+                : Text(
+                    NameTimeline.step2_1.title,
+                    style: TextStyle(color: Colors.white),
+                  ),
           ),
         ),
         backgroundColor: Colors.white,
