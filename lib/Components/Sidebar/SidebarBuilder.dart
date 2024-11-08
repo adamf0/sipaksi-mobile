@@ -22,7 +22,7 @@ class Sidebar {
       child: ListView(
         padding: EdgeInsets.zero,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: list
             .map((item) => ListTile(
                   title: Text(

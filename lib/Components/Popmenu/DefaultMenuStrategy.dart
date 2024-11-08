@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/Notification/SmallCircleNotification.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Status.dart';
+import 'package:sipaksi/Components/Popmenu/PopupMenuStrategy.dart';
 
-class PopmenuItemsFactory {
-  final List<PopupMenuItem<String>> list;
+class DefaultMenuStrategy implements PopupMenuStrategy {
+  final String type;
 
-  PopmenuItemsFactory({required String type}) : list = _createMenuItems(type);
+  DefaultMenuStrategy({required this.type});
 
-  static List<PopupMenuItem<String>> _createMenuItems(String type) {
+  @override
+  List<PopupMenuItem<String>> getList() {
     if (type == Status.draf.key ||
         type == Status.tolak.key ||
         type == Status.tolak_anggota.key) {
@@ -15,7 +17,7 @@ class PopmenuItemsFactory {
         const PopupMenuItem(value: 'edit', child: Text('Edit')),
         const PopupMenuItem(value: 'delete', child: Text('Delete')),
         PopupMenuItem(
-          value: 'Notifikasi',
+          value: 'notifikasi',
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -56,8 +58,4 @@ class PopmenuItemsFactory {
       return [];
     }
   }
-
-  List<PopupMenuItem<String>> get getList => list;
 }
-
-//Status.menunggu_pilih_reviewer, Status.terima

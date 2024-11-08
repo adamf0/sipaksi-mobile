@@ -39,7 +39,7 @@ class _LuaranTambahanFormPageState extends State<LuaranTambahanFormPage> {
               final loadingState =
                   Provider.of<LoadingSaveLuaranTambahanFormState>(context);
 
-              return constraints.maxWidth >= 640
+              return constraints.maxWidth >= 540
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -64,7 +64,7 @@ class _LuaranTambahanFormPageState extends State<LuaranTambahanFormPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 640) {
+            if (constraints.maxWidth >= 540) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -73,7 +73,7 @@ class _LuaranTambahanFormPageState extends State<LuaranTambahanFormPage> {
                     child: Sidebar.createSidebar(
                       context: context,
                       height: height,
-                      list: ListItemsSidebar(current),
+                      list: ListItemsSidebar(context, current),
                     ),
                   ),
                   Expanded(

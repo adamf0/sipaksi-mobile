@@ -4,15 +4,21 @@ class DialogFactory {
   //tambahkan startagy pattern untuk tampung
   final BuildContext context;
   final Widget content;
+  final Function yesTap;
+  final Function noTap;
 
-  DialogFactory({required this.content, required this.context});
+  DialogFactory(
+      {required this.content,
+      required this.context,
+      required this.yesTap,
+      required this.noTap});
 
   void showDialog(String type) {
     //, {VoidCallback? onConfirm}
-    Widget title = const Text('Konfirmasi Hapus');
+    Widget title = Text(type == "confirm_dialog" ? 'Konfirmasi Hapus' : '');
     Widget buildContent;
 
-    if (type == "confirm_dialog") {
+    if (type == "confirm_dialog" || type == "logout_dialog") {
       buildContent = Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -23,9 +29,7 @@ class DialogFactory {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => yesTap(),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   foregroundColor: Colors.white,
@@ -37,9 +41,7 @@ class DialogFactory {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => noTap(),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   foregroundColor: Colors.white,

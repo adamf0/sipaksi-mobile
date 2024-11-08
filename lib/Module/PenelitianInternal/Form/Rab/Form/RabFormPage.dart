@@ -39,7 +39,7 @@ class _RabFormPageState extends State<RabFormPage> {
               final loadingState =
                   Provider.of<LoadingSaveRabFormState>(context);
 
-              return constraints.maxWidth >= 640
+              return constraints.maxWidth >= 540
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -64,7 +64,7 @@ class _RabFormPageState extends State<RabFormPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 640) {
+            if (constraints.maxWidth >= 540) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -73,7 +73,7 @@ class _RabFormPageState extends State<RabFormPage> {
                     child: Sidebar.createSidebar(
                       context: context,
                       height: height,
-                      list: ListItemsSidebar(current),
+                      list: ListItemsSidebar(context, current),
                     ),
                   ),
                   Expanded(

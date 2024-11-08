@@ -42,7 +42,7 @@ class _RumpunIlmuPageState extends State<RumpunIlmuPage> {
               final loadingState =
                   Provider.of<LoadingSaveRumpunIlmuState>(context);
 
-              return constraints.maxWidth >= 640
+              return constraints.maxWidth >= 540
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -67,7 +67,7 @@ class _RumpunIlmuPageState extends State<RumpunIlmuPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 640) {
+            if (constraints.maxWidth >= 540) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -76,7 +76,7 @@ class _RumpunIlmuPageState extends State<RumpunIlmuPage> {
                     child: Sidebar.createSidebar(
                       context: context,
                       height: height,
-                      list: ListItemsSidebar(current),
+                      list: ListItemsSidebar(context, current),
                     ),
                   ),
                   Expanded(
@@ -148,7 +148,7 @@ class _ContentState extends State<Content> {
                 children: [
                   LayoutBuilder(
                     builder: (context, constraints) {
-                      return constraints.maxWidth >= 640
+                      return constraints.maxWidth >= 540
                           ? Container(
                               margin: EdgeInsets.symmetric(
                                 vertical: widget.height * 0.02,

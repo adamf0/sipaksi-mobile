@@ -1,36 +1,29 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:io';
 
-import 'package:awesome_ripple_animation/awesome_ripple_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:sipaksi/Components/CenterLoading/CenterLoadingComponent.dart';
 import 'package:sipaksi/Components/Error/DataNotFoundComponent.dart';
 import 'package:sipaksi/Components/Error/ErrorComponent.dart';
-import 'package:sipaksi/Components/Notification/SmallCircleNotification.dart';
 import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
 import 'package:sipaksi/Module/Abstraction/CommandInvoker.dart';
-import 'package:sipaksi/Components/Popmenu/DefaultMenuStrategy.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Event/DeleteCommand.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Event/EditCommand.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Event/NotificationCommand.dart';
+import 'package:sipaksi/Module/PenelitianInternal/List/Event/BukaCommand.dart';
 import 'package:sipaksi/Components/Popmenu/ItemsPopmenu.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Post.dart';
 import 'package:dio/dio.dart';
-import 'package:sipaksi/Module/PenelitianInternal/List/Entity/Status.dart';
 import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
+import 'package:sipaksi/Components/Popmenu/NotificationMenuStrategy.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:sipaksi/Module/Shared/constant.dart';
 
-class InternalResearchCatalogPage extends StatefulWidget {
-  const InternalResearchCatalogPage({super.key});
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({super.key});
 
   @override
-  State<InternalResearchCatalogPage> createState() =>
-      _InternalResearchCatalogPageState();
+  State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _InternalResearchCatalogPageState
-    extends State<InternalResearchCatalogPage> {
+class _NotificationPageState extends State<NotificationPage> {
   static Future<List<Post>> getPosts() async {
     try {
       final response = await Dio(
@@ -43,10 +36,10 @@ class _InternalResearchCatalogPageState
       final List body = response.data;
       return body.map((e) => Post.fromJson(e)).toList();
     } on DioError catch (e) {
-      print("InternalResearchCatalogPage [getPosts](DioError): ${e.message}");
+      print("NotificationPage [getPosts](DioError): ${e.message}");
       rethrow;
     } catch (e) {
-      print("InternalResearchCatalogPage [getPosts](Error): $e");
+      print("NotificationPage [getPosts](Error): $e");
       rethrow;
     }
   }
@@ -87,19 +80,8 @@ class _InternalResearchCatalogPageState
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          Module.penelitian_internal.value,
+          "Notifikasi",
           style: TextStyle(color: Colors.white),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Theme.of(context).primaryColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
         ),
       ),
       body: Content(height: height, width: width, postsFuture: postsFuture),
@@ -121,7 +103,7 @@ class Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Module current = Module.penelitian_internal;
+    Module current = Module.notifikasi;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -157,12 +139,12 @@ class Content extends StatelessWidget {
                                 onTap: () => Navigator.of(context).pop(),
                               ),
                               ItemStepCreadCrumb(
-                                title: Module.penelitian_internal.value,
+                                title: "Notifikasi",
                                 onTap: null,
                               )
                             ]),
                       ),
-                      ListCatalog(
+                      ListNotification(
                         height: height,
                         width: width,
                         sourceFuture: postsFuture,
@@ -175,7 +157,7 @@ class Content extends StatelessWidget {
           );
         } else {
           return SingleChildScrollView(
-            child: ListCatalog(
+            child: ListNotification(
               height: height,
               width: width,
               sourceFuture: postsFuture,
@@ -187,8 +169,8 @@ class Content extends StatelessWidget {
   }
 }
 
-class ListCatalog extends StatelessWidget {
-  const ListCatalog({
+class ListNotification extends StatelessWidget {
+  const ListNotification({
     super.key,
     required this.height,
     required this.width,
@@ -243,15 +225,11 @@ class ItemsListview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Status status = Status.parse("tolak");
-    PopmenuItemsFactory factory = PopmenuItemsFactory(
-      startegy: DefaultMenuStrategy(type: status.key),
-    );
+    PopmenuItemsFactory factory =
+        PopmenuItemsFactory(startegy: NotificationMenuStrategy());
 
     final commandInvoker = CommandInvoker({
-      "edit": EditCommand(),
-      "delete": DeleteCommand(),
-      "notifikasi": NotificationCommand(),
+      "buka": BukaCommand(),
     });
     return Container(
       margin: const EdgeInsets.only(
@@ -261,8 +239,12 @@ class ItemsListview extends StatelessWidget {
       ),
       child: Card(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              margin: EdgeInsets.only(left: 15),
+              child: Icon(Icons.warning),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -273,132 +255,69 @@ class ItemsListview extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      "01/12/2024",
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "A001",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface),
+                        ),
+                        Text(
+                          "01/12/2024",
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface),
+                        ),
+                      ],
                     ),
-                    const InfoItemsListview(
-                        title: "Nama Ketua Pengusul", value: "adam"),
-                    const InfoItemsListview(title: "Fakultas", value: "MIPA"),
-                    const InfoItemsListview(title: "Prodi", value: "Ilkom"),
-                    InfoItemsListview(title: "Judul", value: post.title),
-                    const InfoItemsListview(
-                        title: "Skema",
-                        value:
-                            "Penelitian Kolaborasi"), //kategori / skema, factory
-                    InfoItemsListview(
-                      title: "Reviewer",
-                      value: Text(
-                        "adam dan furqon",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.tertiary),
-                      ),
-                    ),
-                    InfoItemsListview(
-                      title: "Status",
-                      value: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            status.value,
-                            style: TextStyle(color: status.color),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Pengajuan penelitian internal ditolak",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Manrope',
+                            color: Theme.of(context).colorScheme.tertiary,
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                        Text(
+                          "terjadi pelanggaran kebijakan dalam pengajuan formulir. deadline perbaikan hingga tanggal 1 agustus 2024",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Manrope',
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
             ),
             (factory.getList.isNotEmpty
                 ? PopupMenuButton(
-                    icon: Stack(
-                      children: [
-                        Icon(Icons.more_vert),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: RippleAnimation(
-                            size: Size(10, 10),
-                            key: UniqueKey(),
-                            repeat: true,
-                            color: Colors.red,
-                            minRadius: 10,
-                            ripplesCount: 1,
-                            duration: Duration(milliseconds: 2300),
-                            child: SmallCircleNotification(),
-                          ),
-                        )
-                      ],
-                    ),
+                    icon: Icon(Icons.more_vert),
                     itemBuilder: (context) {
                       return factory.getList;
                     },
-                    onSelected: (String value) {
-                      print('comman: $value');
-                      if (value == "edit") {
-                        commandInvoker.executeCommand(value, params: {
-                          'context': context,
-                        });
-                      } else if (value == "delete") {
-                        commandInvoker.executeCommand(value, params: {
-                          'context': context,
-                          'title': post.title,
-                        });
-                      } else if (value == "notifikasi") {
-                        commandInvoker.executeCommand(value, params: {
-                          'context': context,
-                        });
-                      } else if (value == "approve_member") {
-                      } else if (value == "reject_member") {
-                      } else if (value == "proposal") {
-                      } else if (value == "show_administration") {
-                      } else if (value == "show_substance") {
-                      } else if (value == "add_logbook") {
-                      } else if (value == "add_progress_report") {
-                      } else if (value == "add_final_report") {}
+                    onSelected: (String value) => {
+                      if (value == "buka")
+                        {
+                          commandInvoker.executeCommand(value, params: {
+                            'context': context,
+                          })
+                        }
                     },
                   )
                 : SizedBox.shrink())
           ],
         ),
       ),
-    );
-  }
-}
-
-class InfoItemsListview extends StatelessWidget {
-  const InfoItemsListview({super.key, required this.title, this.value});
-
-  final String title;
-  final dynamic value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w300,
-            fontFamily: 'Manrope',
-            color: Colors.black,
-          ),
-        ),
-        (value is Widget
-            ? value
-            : Text(
-                value ?? "",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Manrope',
-                    color: Theme.of(context).colorScheme.tertiary),
-              )),
-        const SizedBox(height: 8)
-      ],
     );
   }
 }

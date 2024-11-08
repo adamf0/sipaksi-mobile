@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
 import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
 import 'package:sipaksi/Components/VerticalTimeline/ItemsTimeline.dart';
+import 'package:sipaksi/Module/Notification/NotificationPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiDosenPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaMbkmPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/AnggotaPenelitian/AnggotaPenelitiMahasiswaPage.dart';
@@ -24,6 +26,7 @@ import 'dart:math' as math;
 
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:sipaksi/Module/Shared/constant.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class InternalResearchFormPage extends StatefulWidget {
   const InternalResearchFormPage({super.key});
@@ -302,7 +305,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         appBar: AppBar(
           leading: LayoutBuilder(
             builder: (context, constraints) {
-              return constraints.maxWidth >= 640
+              return constraints.maxWidth >= 540
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -325,7 +328,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 640) {
+            if (constraints.maxWidth >= 540) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -334,7 +337,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
                     child: Sidebar.createSidebar(
                       context: context,
                       height: height,
-                      list: ListItemsSidebar(current),
+                      list: ListItemsSidebar(context, current),
                     ),
                   ),
                   Expanded(
@@ -368,7 +371,7 @@ class _InternalResearchFormPageState extends State<InternalResearchFormPage> {
   }
 }
 
-class Content extends StatelessWidget {
+class Content extends StatefulWidget {
   const Content({
     super.key,
     required this.height,
@@ -380,6 +383,24 @@ class Content extends StatelessWidget {
   final double height, width;
   final Status status;
   final List<ItemsTimeline> list;
+
+  @override
+  State<Content> createState() => _ContentState();
+}
+
+class _ContentState extends State<Content> {
+  SharedPreferences? prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -447,7 +468,8 @@ class Content extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         List<Widget> x = [];
-        if (constraints.maxWidth >= 640) {
+        print("width: ${constraints.maxWidth}");
+        if (constraints.maxWidth >= 540) {
           x.add(
             StepBreadCrumb.createBreadCrumb(context: context, list: [
               ItemStepCreadCrumb(
@@ -468,29 +490,54 @@ class Content extends StatelessWidget {
           );
         }
 
+        print('current level: ${prefs?.getString('level')}');
         x.addAll([
-          const SizedBox(height: 10),
-          StatusWithHistoryComponent(status: status),
-          const SizedBox(height: 5),
-          Divider(
-            color: Theme.of(context).colorScheme.surfaceDim,
-            thickness: 0,
-            height: 2,
-          ),
+          prefs?.getString('level') == "dosen" ||
+                  prefs?.getString('level') == null
+              ? StatusWithHistoryComponent(status: widget.status)
+              : SizedBox.shrink(),
+          prefs?.getString('level') == "dosen" ||
+                  prefs?.getString('level') == null
+              ? const SizedBox(height: 5)
+              : SizedBox.shrink(),
+          prefs?.getString('level') == "dosen" ||
+                  prefs?.getString('level') == null
+              ? Divider(
+                  color: Theme.of(context).colorScheme.surfaceDim,
+                  thickness: 0,
+                  height: 2,
+                )
+              : SizedBox.shrink(),
           const SizedBox(height: 15),
-          const HeaderComponent(),
+          prefs?.getString('level') == "dosen" ||
+                  prefs?.getString('level') == null
+              ? const HeaderComponent()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Tiket Perbaikan",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    CurrentTicket(),
+                  ],
+                ),
           const SizedBox(height: 10),
           Timeline(
             hideIndicator: [8],
-            indicators: getWidgets("indicator", list, 0),
-            children: getWidgets("child", list, 0),
+            indicators: getWidgets("indicator", widget.list, 0),
+            children: getWidgets("child", widget.list, 0),
           )
         ]);
 
         return Container(
           margin: EdgeInsets.only(
-            left: width * .01,
-            right: width * .01,
+            left: widget.width * .01,
+            right: widget.width * .01,
             top: 10,
           ),
           child: Column(
@@ -500,6 +547,186 @@ class Content extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class CurrentTicket extends StatefulWidget {
+  const CurrentTicket({super.key});
+
+  @override
+  State<CurrentTicket> createState() => _CurrentTicketState();
+}
+
+class _CurrentTicketState extends State<CurrentTicket> {
+  String? currentTicket;
+  String? lastTicket;
+  bool loadingCurrentTicket = false;
+  bool _isDisposed = false;
+
+  Future<void> createTicket() async {
+    print("Buat tiket");
+    if (_isDisposed) return;
+
+    if (currentTicket == null && lastTicket == null) {
+      setState(() {
+        loadingCurrentTicket = true;
+      });
+      await Future.delayed(const Duration(seconds: 2), () {
+        if (!_isDisposed) {
+          setState(() {
+            currentTicket = "A001";
+            lastTicket = "A001";
+            loadingCurrentTicket = false;
+          });
+        }
+      });
+
+      await Future.delayed(const Duration(seconds: 1), () {
+        if (!_isDisposed) {
+          setState(() {
+            currentTicket = null;
+          });
+        }
+      });
+    }
+  }
+
+  Future<void> updateTicket() async {
+    if (_isDisposed) return;
+
+    if (currentTicket != lastTicket) {
+      print("Perbaharui tiket");
+
+      setState(() {
+        loadingCurrentTicket = true;
+      });
+      await Future.delayed(const Duration(seconds: 2), () {
+        if (!_isDisposed) {
+          setState(() {
+            currentTicket = "A002";
+            lastTicket = "A002";
+            loadingCurrentTicket = false;
+          });
+        }
+      });
+    }
+  }
+
+  Future<void> loadCurrentTicket() async {
+    if (_isDisposed) return;
+
+    setState(() {
+      loadingCurrentTicket = true;
+    });
+    await Future.delayed(const Duration(seconds: 3), () {
+      if (!_isDisposed) {
+        setState(() {
+          loadingCurrentTicket = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (currentTicket == null) {
+      loadCurrentTicket();
+    }
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget render = Container();
+    if (currentTicket == null && lastTicket == null) {
+      render = Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Skeletonizer(
+            enabled: loadingCurrentTicket,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'Tidak ada tiket perbaikan',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontFamily: 'Manrope',
+                    ),
+                  ),
+                  const WidgetSpan(
+                    child: SizedBox(width: 5),
+                  ),
+                  TextSpan(
+                    text: "Buat Tiket Perbaikan",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        await createTicket();
+                      },
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      );
+    } else if (lastTicket != null) {
+      render = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: currentTicket ?? "-",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontFamily: 'Manrope',
+                  ),
+                ),
+                const WidgetSpan(
+                  child: SizedBox(width: 5),
+                ),
+                TextSpan(
+                  text: "Perbaharui Tiket",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      await updateTicket();
+                    },
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const NotificationPage(), //harusnya ke detail
+                ),
+              );
+            },
+            icon: Icon(Icons.arrow_right),
+          ),
+        ],
+      );
+    }
+    return render;
   }
 }
 

@@ -1,8 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_ripple_animation/awesome_ripple_animation.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:sipaksi/Components/DropdownSearch/CloseBottomSheet.dart';
+import 'package:sipaksi/Components/Notification/SmallCircleNotification.dart';
+import 'package:sipaksi/Components/Popmenu/Event/LogoutCommand.dart';
+import 'package:sipaksi/Module/Dashboard/Provider/LevelState.dart';
 import 'package:sipaksi/Module/Dashboard/TypeSubmission.dart';
+import 'package:sipaksi/Module/Notification/NotificationPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/InternalResearchCatalogPage.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,6 +24,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   late CarouselSliderController innerCarouselController;
   int innerCurrentPage = 0;
+  String level = "dosen";
 
   @override
   void initState() {
@@ -61,68 +69,97 @@ class _DashboardPageState extends State<DashboardPage> {
     final size = MediaQuery.of(context).size;
     final double _height = size.height;
     final double _width = size.width;
+    List<String> listMode = ["dosen", "fakultas", "lppm", "reviewer"];
 
-    return ScreenUtilInit(
-      designSize: Size(_width, _height),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return Scaffold(
-          floatingActionButton: ButtonQuestion(),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: BottomNav(
-            notificationTap: () {},
-            logoutTap: () {},
-          ),
-          backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Container(
-                  margin: EdgeInsets.fromLTRB(20, (_height * .05), 20, 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Header(),
-                      const SizedBox(height: 24),
-                      const Greeting(),
-                      const SizedBox(height: 18),
-                      const Text(
-                        "Mulai Melengkapi",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'Manrope',
-                        ),
-                      ),
-                      _buildCards(_height),
-                      SizedBox(height: 10),
-                      Menus(
-                        height: _getMenuHeight(_height, _width),
-                        width: _width,
-                        listMenus: listMenus,
-                        controller: innerCarouselController,
-                        onTap: (tap) {
-                          if (tap.judul == Module.penelitian_internal.value) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const InternalResearchCatalogPage(),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+    return ChangeNotifierProvider(
+      create: (context) => LevelState(level),
+      child: ScreenUtilInit(
+        designSize: Size(_width, _height),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (_, child) {
+          return Scaffold(
+            floatingActionButton: ButtonQuestion(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar: BottomNav(
+              notificationTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationPage(),
                   ),
                 );
               },
+              logoutTap: () {
+                LogoutCommand command = new LogoutCommand();
+                command.execute({"context": context});
+              },
             ),
-          ),
-        );
-      },
+            backgroundColor: Colors.white,
+            body: SingleChildScrollView(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Container(
+                    margin: EdgeInsets.fromLTRB(20, (_height * .05), 20, 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Header(
+                          hideChangeMode: listMode.length == 1,
+                          changeMode: () => changeMode(context, listMode),
+                          notificationTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NotificationPage(),
+                              ),
+                            );
+                          },
+                          logoutTap: () {
+                            LogoutCommand command = new LogoutCommand();
+                            command.execute({"context": context});
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        const Greeting(),
+                        const SizedBox(height: 18),
+                        const Text(
+                          "Mulai Melengkapi",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                        _buildCards(_height),
+                        SizedBox(height: 10),
+                        Menus(
+                          height: _getMenuHeight(_height, _width),
+                          width: _width,
+                          listMenus: listMenus,
+                          controller: innerCarouselController,
+                          onTap: (tap) {
+                            if (tap.judul == Module.penelitian_internal.value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const InternalResearchCatalogPage(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -140,228 +177,109 @@ class _DashboardPageState extends State<DashboardPage> {
           );
         } else {
           // For desktop: Use a row layout
-          return IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  child: IdSintaCard(height: height * 0.2, IdSinta: "123"),
-                ),
-                const SizedBox(width: 10), // Add spacing between the cards
-                Expanded(
-                  child: JabatanFungsionalCard(height: height * 0.2),
-                ),
-              ],
-            ),
+          return Row(
+            children: [
+              Expanded(
+                child: IdSintaCard(height: height * 0.2, IdSinta: "123"),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: JabatanFungsionalCard(height: height * 0.2),
+              ),
+            ],
           );
+          // return IntrinsicHeight(
+          //   child: ,
+          // );
         }
       },
     );
   }
 
   double _getMenuHeight(double height, double maxWidth) {
-    return maxWidth >= 640 ? height * .2 : height * .15;
+    return maxWidth >= 540 ? height * .2 : height * .15;
+  }
+
+  changeMode(BuildContext context, List<String> listMode) async {
+    final levelState = Provider.of<LevelState>(context, listen: false);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      builder: (contextSheet) {
+        return StatefulBuilder(builder: (context, setState) {
+          return FractionallySizedBox(
+            heightFactor: 0.8,
+            widthFactor: 1.0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  CloseBottomSheet(ctx: contextSheet),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Pilih Mode",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: GridView(
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childAspectRatio: 1,
+                      ),
+                      children: [
+                        for (int i = 0; i < listMode.length; i++)
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: listMode[i] == levelState.level
+                                  ? Colors.grey[300]
+                                  : Colors.blue[100 * (i % 9 + 1)],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: listMode[i] == levelState.level
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      level = listMode[i];
+                                      levelState.setLevel(listMode[i]);
+                                    });
+                                    Navigator.of(contextSheet).pop();
+                                  },
+                            child: Center(
+                              child: Text(
+                                listMode[i],
+                                style: TextStyle(
+                                  color: listMode[i] == levelState.level
+                                      ? Colors.grey[700]
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
   }
 }
-
-// class DashboardPage extends StatefulWidget {
-//   const DashboardPage({super.key});
-
-//   @override
-//   State<DashboardPage> createState() => _DashboardPageState();
-// }
-
-// class _DashboardPageState extends State<DashboardPage> {
-//   late CarouselSliderController innerCarouselController;
-//   int innerCurrentPage = 0;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     innerCarouselController = CarouselSliderController();
-//   }
-
-//   @override
-//   void dispose() {
-//     // innerCarouselController.dispose(); // Dispose the controller if needed
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final List<TypeSubmission> listMenus = [
-//       TypeSubmission(
-//         judul: "Insentif",
-//         img_asset: 'lib/assets/images/money.png',
-//       ),
-//       TypeSubmission(
-//         judul: "Penelitian Internal",
-//         img_asset: 'lib/assets/images/microscope.png',
-//       ),
-//       TypeSubmission(
-//         judul: "Penelitian Nasional",
-//         img_asset: 'lib/assets/images/national.png',
-//       ),
-//       TypeSubmission(
-//         judul: "PKM Internal",
-//         img_asset: 'lib/assets/images/creativity.png',
-//       ),
-//       TypeSubmission(
-//         judul: "PKM Nasional",
-//         img_asset: 'lib/assets/images/compotitive.png',
-//       ),
-//       TypeSubmission(
-//         judul: "PPM",
-//         img_asset: 'lib/assets/images/international.png',
-//       ),
-//     ];
-
-//     Size size;
-//     double _height, _width;
-
-//     size = MediaQuery.of(context).size;
-//     _width = size.width;
-//     _height = size.height;
-
-//     return ScreenUtilInit(
-//       designSize: Size(_width, _height),
-//       minTextAdapt: true,
-//       splitScreenMode: true,
-//       builder: (_, child) {
-//         return Scaffold(
-//           // appBar: AppBar(),
-//           extendBodyBehindAppBar: false,
-//           extendBody: true,
-//           resizeToAvoidBottomInset: false,
-//           floatingActionButton: ButtonQuestion(),
-//           floatingActionButtonLocation:
-//               FloatingActionButtonLocation.centerDocked,
-//           bottomNavigationBar: BottomNav(
-//             notificationTap: () {},
-//             logoutTap: () {},
-//           ),
-//           body: SingleChildScrollView(
-//             child: LayoutBuilder(
-//               builder: (context, constraints) {
-//                 if (constraints.maxWidth >= 640) {
-//                   return Container(
-//                     margin: EdgeInsets.fromLTRB(
-//                       .03.sw,
-//                       .05.sh,
-//                       .03.sw,
-//                       0.sh,
-//                     ),
-//                     child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         const Header(),
-//                         const SizedBox(height: 24),
-//                         const Greeting(),
-//                         const SizedBox(height: 18),
-//                         const Text(
-//                           "Mulai Melengkapi",
-//                           style: TextStyle(
-//                             fontSize: 20,
-//                             fontWeight: FontWeight.w900,
-//                             fontFamily: 'Manrope',
-//                           ),
-//                         ),
-//                         IntrinsicHeight(
-//                           child: Row(
-//                             children: [
-//                               Expanded(
-//                                 child: IdSintaCard(
-//                                     height: _height * .2, IdSinta: "123"),
-//                               ),
-//                               Expanded(
-//                                 child:
-//                                     JabatanFungsionalCard(height: _height * .2),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         const SizedBox(height: 10),
-//                         Menus(
-//                           height: _height * .2,
-//                           width: _width,
-//                           listMenus: listMenus,
-//                           controller: innerCarouselController,
-//                           onTap: (tap) {
-//                             if (tap.judul == "Penelitian Internal") {
-//                               Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) =>
-//                                       const InternalResearchCatalogPage(),
-//                                 ),
-//                               );
-//                             }
-//                             // setState(() {
-//                             //   innerCurrentPage = index;
-//                             // });
-//                           },
-//                         ),
-//                       ],
-//                     ),
-//                   );
-//                 } else {
-//                   //mobile
-//                   return Container(
-//                     margin: EdgeInsets.fromLTRB(20, (_height * .05), 20, 30),
-//                     child: Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Header(
-//                           changeMode: () {},
-//                           notificationTap: () {},
-//                           logoutTap: () {},
-//                         ),
-//                         const SizedBox(height: 24),
-//                         const Greeting(),
-//                         const SizedBox(height: 18),
-//                         const Text(
-//                           "Mulai Melengkapi",
-//                           style: TextStyle(
-//                             fontSize: 20,
-//                             fontWeight: FontWeight.w900,
-//                             fontFamily: 'Manrope',
-//                           ),
-//                         ),
-//                         IdSintaCard(height: _height * .12, IdSinta: "123"),
-//                         const SizedBox(height: 5),
-//                         JabatanFungsionalCard(height: _height * .12),
-//                         const SizedBox(height: 10),
-//                         Menus(
-//                           height: _height * .15,
-//                           width: _width,
-//                           listMenus: listMenus,
-//                           controller: innerCarouselController,
-//                           onTap: (tap) {
-//                             if (tap.judul == "Penelitian Internal") {
-//                               Navigator.push(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) =>
-//                                       const InternalResearchCatalogPage(),
-//                                 ),
-//                               );
-//                             }
-//                             // setState(() {
-//                             //   innerCurrentPage = index;
-//                             // });
-//                           },
-//                         ),
-//                       ],
-//                     ),
-//                   );
-//                 }
-//               },
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
 
 class BottomNav extends StatelessWidget {
   const BottomNav({
@@ -377,8 +295,8 @@ class BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 640) {
-          return SizedBox.shrink(); // Return an empty widget for wider screens
+        if (constraints.maxWidth >= 540) {
+          return SizedBox.shrink();
         }
 
         return BottomAppBar(
@@ -400,65 +318,41 @@ class BottomNav extends StatelessWidget {
   }
 
   Widget _buildIconButton(IconData icon, Function()? onTap) {
-    return IconButton(
-      icon: Icon(
-        icon,
-        color: Colors.white,
-      ),
-      onPressed: onTap,
-    );
+    return icon == Icons.notifications
+        ? Stack(
+            children: [
+              IconButton(
+                icon: Icon(
+                  icon,
+                  color: Colors.white,
+                ),
+                onPressed: onTap,
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: RippleAnimation(
+                  size: Size(10, 10),
+                  key: UniqueKey(),
+                  repeat: true,
+                  color: Colors.red,
+                  minRadius: 10,
+                  ripplesCount: 1,
+                  duration: Duration(milliseconds: 2300),
+                  child: SmallCircleNotification(),
+                ),
+              )
+            ],
+          )
+        : IconButton(
+            icon: Icon(
+              icon,
+              color: Colors.white,
+            ),
+            onPressed: onTap,
+          );
   }
 }
-
-// class BottomNav extends StatelessWidget {
-//   const BottomNav({
-//     super.key,
-//     this.notificationTap,
-//     this.logoutTap,
-//   });
-
-//   final Function()? notificationTap;
-//   final Function()? logoutTap;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return LayoutBuilder(
-//       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 640) {
-//           return SizedBox.shrink();
-//         } else {
-//           return BottomAppBar(
-//             padding: const EdgeInsets.symmetric(horizontal: 10),
-//             height: 60,
-//             color: Theme.of(context).primaryColor,
-//             shape: const CircularNotchedRectangle(),
-//             notchMargin: 5,
-//             child: Row(
-//               mainAxisSize: MainAxisSize.max,
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: <Widget>[
-//                 IconButton(
-//                   icon: const Icon(
-//                     Icons.notifications,
-//                     color: Colors.white,
-//                   ),
-//                   onPressed: notificationTap,
-//                 ),
-//                 IconButton(
-//                   icon: const Icon(
-//                     Icons.logout,
-//                     color: Colors.white,
-//                   ),
-//                   onPressed: logoutTap,
-//                 ),
-//               ],
-//             ),
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
 
 class ButtonQuestion extends StatelessWidget {
   const ButtonQuestion({super.key});
@@ -485,35 +379,6 @@ class ButtonQuestion extends StatelessWidget {
     );
   }
 }
-
-// class ButtonQuestion extends StatelessWidget {
-//   const ButtonQuestion({
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return LayoutBuilder(
-//       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 640) {
-//           return SizedBox.shrink();
-//         } else {
-//           return FloatingActionButton(
-//             onPressed: () {},
-//             backgroundColor: Theme.of(context).primaryColor,
-//             shape: RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(30),
-//             ),
-//             child: const Icon(
-//               Icons.question_answer,
-//               color: Colors.white,
-//             ),
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
 
 class JabatanFungsionalCard extends StatelessWidget {
   const JabatanFungsionalCard({
@@ -753,15 +618,17 @@ class Menus extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 640) {
+        if (constraints.maxWidth >= 540) {
           // Desktop layout
           return Container(
             height: height,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: listMenus
-                  .map((item) =>
-                      buildItem(item, itemWidth: width / listMenus.length))
+                  .map((item) => buildItem(item,
+                      itemWidth: (width / listMenus.length) >= 300 //cek ulang
+                          ? (width / listMenus.length)
+                          : 300))
                   .toList(),
             ),
           );
@@ -799,95 +666,6 @@ class Menus extends StatelessWidget {
     );
   }
 }
-
-// class Menus extends StatelessWidget {
-//   const Menus({
-//     super.key,
-//     required this.height,
-//     required this.width,
-//     required this.listMenus,
-//     required this.controller,
-//     required this.onTap,
-//   });
-
-//   final double height;
-//   final double width;
-//   final List<TypeSubmission> listMenus;
-//   final CarouselSliderController controller;
-//   final Function(TypeSubmission) onTap;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return LayoutBuilder(
-//       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 640) {
-//           return Container(
-//             height: height,
-//             child: ListView(
-//               scrollDirection: Axis.horizontal,
-//               children: listMenus.map((item) {
-//                 return Builder(
-//                   builder: (BuildContext context) {
-//                     return Container(
-//                       margin: EdgeInsets.only(right: width * .01),
-//                       child: ItemSlider(
-//                         item: item,
-//                         width: width / listMenus.length,
-//                         onTap: onTap,
-//                       ),
-//                     );
-//                   },
-//                 );
-//               }).toList(),
-//             ),
-//           );
-//         } else {
-//           //mobile
-//           return Container(
-//             margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 const Text(
-//                   "Mulai Pengajuan",
-//                   style: TextStyle(
-//                     fontSize: 20,
-//                     fontWeight: FontWeight.w900,
-//                     fontFamily: 'Manrope',
-//                   ),
-//                 ),
-//                 CarouselSlider(
-//                   carouselController: controller,
-//                   options: CarouselOptions(
-//                     autoPlay: true,
-//                     enlargeCenterPage: true,
-//                     enableInfiniteScroll: true,
-//                     viewportFraction: .6,
-//                     height: height,
-//                     onPageChanged: (index, reason) {
-//                       // onPageChanged(index);
-//                     },
-//                   ),
-//                   items: listMenus.map((item) {
-//                     return Builder(
-//                       builder: (BuildContext context) {
-//                         return ItemSlider(
-//                           item: item,
-//                           width: width,
-//                           onTap: onTap,
-//                         );
-//                       },
-//                     );
-//                   }).toList(),
-//                 ),
-//               ],
-//             ),
-//           );
-//         }
-//       },
-//     );
-//   }
-// }
 
 class ItemSlider extends StatelessWidget {
   const ItemSlider({
@@ -976,20 +754,29 @@ class Greeting extends StatelessWidget {
   }
 }
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
   const Header({
-    super.key,
+    Key? key,
+    this.hideChangeMode = false,
     this.changeMode,
     this.notificationTap,
     this.logoutTap,
-  });
+  }) : super(key: key);
 
+  final bool hideChangeMode;
   final Function()? changeMode;
   final Function()? notificationTap;
   final Function()? logoutTap;
 
   @override
+  _HeaderState createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  @override
   Widget build(BuildContext context) {
+    final levelState = Provider.of<LevelState>(context);
+
     final userInfo = Row(
       children: [
         Container(
@@ -1002,10 +789,10 @@ class Header extends StatelessWidget {
           child: Image.asset('lib/assets/images/user.png'),
         ),
         const SizedBox(width: 10),
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Hi, Adam Furqon",
               style: TextStyle(
                 fontSize: 16,
@@ -1014,8 +801,8 @@ class Header extends StatelessWidget {
               ),
             ),
             Text(
-              "Dosen",
-              style: TextStyle(
+              levelState.level,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'Manrope',
@@ -1027,26 +814,46 @@ class Header extends StatelessWidget {
     );
 
     final actionButtons = [
-      IconButton(
-        onPressed: changeMode,
-        icon: Icon(
-          Icons.change_circle,
-          size: 26,
-          color: Theme.of(context).primaryColor,
+      (!widget.hideChangeMode
+          ? IconButton(
+              onPressed: widget.changeMode,
+              icon: Icon(
+                Icons.change_circle,
+                size: 26,
+                color: Theme.of(context).primaryColor,
+              ),
+            )
+          : const SizedBox.shrink()),
+      if (widget.notificationTap != null)
+        Stack(
+          children: [
+            IconButton(
+              onPressed: widget.notificationTap,
+              icon: Icon(
+                Icons.notifications,
+                size: 26,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            Positioned(
+              top: 11,
+              right: 11,
+              child: RippleAnimation(
+                size: const Size(10, 10),
+                key: UniqueKey(),
+                repeat: true,
+                color: Colors.red,
+                minRadius: 10,
+                ripplesCount: 1,
+                duration: const Duration(milliseconds: 2300),
+                child: const SmallCircleNotification(),
+              ),
+            )
+          ],
         ),
-      ),
-      if (notificationTap != null)
+      if (widget.logoutTap != null)
         IconButton(
-          onPressed: notificationTap,
-          icon: Icon(
-            Icons.notifications,
-            size: 26,
-            color: Theme.of(context).primaryColor,
-          ),
-        ),
-      if (logoutTap != null)
-        IconButton(
-          onPressed: logoutTap,
+          onPressed: widget.logoutTap,
           icon: Icon(
             Icons.logout,
             size: 26,
@@ -1061,7 +868,7 @@ class Header extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(child: userInfo),
-            if (constraints.maxWidth >= 640)
+            if (constraints.maxWidth >= 540)
               Row(children: actionButtons)
             else
               Row(children: [actionButtons.first]),
@@ -1071,147 +878,3 @@ class Header extends StatelessWidget {
     );
   }
 }
-
-// class Header extends StatelessWidget {
-//   const Header({
-//     super.key,
-//     this.changeMode,
-//     this.notificationTap,
-//     this.logoutTap,
-//   });
-
-//   final Function()? changeMode;
-//   final Function()? notificationTap;
-//   final Function()? logoutTap;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return LayoutBuilder(
-//       builder: (context, constraints) {
-//         if (constraints.maxWidth >= 640) {
-//           return Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Expanded(
-//                 child: Row(
-//                   children: [
-//                     Container(
-//                       width: 50,
-//                       height: 50,
-//                       decoration: BoxDecoration(
-//                         color: Theme.of(context).primaryColor,
-//                         borderRadius: BorderRadius.circular(60),
-//                       ),
-//                       child: Image.asset('lib/assets/images/user.png'),
-//                     ),
-//                     const SizedBox(width: 10),
-//                     const Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Text(
-//                           "Hi, Adam Furqon",
-//                           style: TextStyle(
-//                             fontSize: 16,
-//                             fontWeight: FontWeight.w600,
-//                             fontFamily: 'Manrope',
-//                           ),
-//                         ),
-//                         Text(
-//                           "Dosen",
-//                           style: TextStyle(
-//                             fontSize: 14,
-//                             fontWeight: FontWeight.w400,
-//                             fontFamily: 'Manrope',
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Row(
-//                 children: [
-//                   IconButton(
-//                     onPressed: changeMode,
-//                     icon: Icon(
-//                       Icons.change_circle,
-//                       size: 26,
-//                       color: Theme.of(context).primaryColor,
-//                     ),
-//                   ),
-//                   IconButton(
-//                     onPressed: notificationTap,
-//                     icon: Icon(
-//                       Icons.notifications,
-//                       size: 26,
-//                       color: Theme.of(context).primaryColor,
-//                     ),
-//                   ),
-//                   IconButton(
-//                     onPressed: logoutTap,
-//                     icon: Icon(
-//                       Icons.logout,
-//                       size: 26,
-//                       color: Theme.of(context).primaryColor,
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ],
-//           );
-//         } else {
-//           return Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Expanded(
-//                 child: Row(
-//                   children: [
-//                     Container(
-//                       width: 50,
-//                       height: 50,
-//                       decoration: BoxDecoration(
-//                         color: Theme.of(context).primaryColor,
-//                         borderRadius: BorderRadius.circular(60),
-//                       ),
-//                       child: Image.asset('lib/assets/images/user.png'),
-//                     ),
-//                     const SizedBox(width: 10),
-//                     const Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Text(
-//                           "Hi, Adam Furqon",
-//                           style: TextStyle(
-//                             fontSize: 16,
-//                             fontWeight: FontWeight.w600,
-//                             fontFamily: 'Manrope',
-//                           ),
-//                         ),
-//                         Text(
-//                           "Dosen",
-//                           style: TextStyle(
-//                             fontSize: 14,
-//                             fontWeight: FontWeight.w400,
-//                             fontFamily: 'Manrope',
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               IconButton(
-//                 onPressed: changeMode,
-//                 icon: Icon(
-//                   Icons.change_circle,
-//                   size: 26,
-//                   color: Theme.of(context).primaryColor,
-//                 ),
-//               ),
-//             ],
-//           );
-//         }
-//       },
-//     );
-//   }
-// }

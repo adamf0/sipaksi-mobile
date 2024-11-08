@@ -7,6 +7,7 @@ enum Module {
   ppm('ppm', "Penelitian dan Pengabdian Masyarakat Lainnya / Internasional"),
   menunggu_anggota('menunggu_anggota', "Menunggu Verifikasi Anggota"),
   insentif('insentif', "Insentif"),
+  notifikasi('notifikasi', "Notifikasi"),
   none('error', "error");
 
   final String key;

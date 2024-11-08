@@ -52,7 +52,7 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
               final loadingState =
                   Provider.of<LoadingSaveDokumenPendukungState>(context);
 
-              return constraints.maxWidth >= 640
+              return constraints.maxWidth >= 540
                   ? SizedBox.shrink()
                   : IconButton(
                       icon: const Icon(
@@ -77,7 +77,7 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
         backgroundColor: Colors.white,
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxWidth >= 640) {
+            if (constraints.maxWidth >= 540) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -86,7 +86,7 @@ class _DokumenPendukungPageState extends State<DokumenPendukungPage> {
                     child: Sidebar.createSidebar(
                       context: context,
                       height: height,
-                      list: ListItemsSidebar(current),
+                      list: ListItemsSidebar(context, current),
                     ),
                   ),
                   Expanded(
