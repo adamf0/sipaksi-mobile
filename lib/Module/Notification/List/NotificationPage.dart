@@ -80,7 +80,7 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Notifikasi",
+          Module.notifikasi.value,
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -139,7 +139,7 @@ class Content extends StatelessWidget {
                                 onTap: () => Navigator.of(context).pop(),
                               ),
                               ItemStepCreadCrumb(
-                                title: "Notifikasi",
+                                title: Module.notifikasi.value,
                                 onTap: null,
                               )
                             ]),

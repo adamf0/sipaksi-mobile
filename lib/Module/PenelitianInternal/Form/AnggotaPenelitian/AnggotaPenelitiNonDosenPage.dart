@@ -343,7 +343,7 @@ Future<void> _showBottomSheet(BuildContext context) async {
       return StatefulBuilder(
         builder: (context, setState) {
           return FractionallySizedBox(
-            heightFactor: 0.8,
+            heightFactor: 1.0,
             widthFactor: 1.0,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),

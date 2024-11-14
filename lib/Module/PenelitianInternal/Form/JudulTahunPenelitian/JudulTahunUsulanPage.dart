@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sipaksi/Components/BreadCrumb/BreadCrumbBuilder.dart';
 import 'package:sipaksi/Components/Sidebar/SidebarBuilder.dart';
 import 'package:sipaksi/Module/PenelitianInternal/Form/JudulTahunPenelitian/Provider/LoadingSaveJudulTahunUsulanState.dart';
@@ -114,16 +115,24 @@ class _ContentState extends State<Content> {
   late DateTime _lastDay;
   late DateTime _selectedDay;
   late CalendarFormat _calendarFormat;
+  SharedPreferences? prefs;
 
   @override
   void initState() {
     super.initState();
+    _loadPreferences();
 
     _focusedDay = DateTime.parse("2024-01-01");
     _firstDay = DateTime.now().subtract(const Duration(days: 3650));
     _lastDay = DateTime.now().add(const Duration(days: 3650));
     _selectedDay = DateTime.parse("2024-01-01");
     _calendarFormat = CalendarFormat.month;
+  }
+
+  Future<void> _loadPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    await prefs?.setString('level', "fakultas");
+    setState(() {});
   }
 
   @override
@@ -188,13 +197,16 @@ class _ContentState extends State<Content> {
                   TextField(
                     keyboardType: TextInputType.text,
                     obscureText: false,
+                    enabled: prefs?.getString('level') != "dosen",
                     onChanged: (value) => {},
                     textInputAction: TextInputAction.next,
                     maxLines: 1,
                     style:
                         TextStyle(color: Theme.of(context).colorScheme.outline),
                     decoration: InputDecoration(
-                      errorText: "belum diisi",
+                      errorText: prefs?.getString('level') != "dosen"
+                          ? null
+                          : "belum diisi",
                       hintStyle: TextStyle(
                         color: Theme.of(context).colorScheme.outline,
                       ),
@@ -243,45 +255,104 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  TableCalendar(
-                    calendarFormat: _calendarFormat,
-                    availableCalendarFormats: const {
-                      CalendarFormat.month: "Month"
-                    },
-                    onFormatChanged: (format) {},
-                    focusedDay: _focusedDay,
-                    firstDay: _firstDay,
-                    lastDay: _lastDay,
-                    onPageChanged: (focusedDay) {
-                      setState(() {
-                        _focusedDay = focusedDay;
-                      });
-                    },
-                    selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                      });
-                    },
-                    calendarStyle: CalendarStyle(
-                      weekendTextStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                      selectedDecoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
-                      ),
-                    ),
-                    calendarBuilders: CalendarBuilders(
-                      headerTitleBuilder: (context, day) {
-                        return Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(DateFormat('dd/MMMM/yyyy').format(day)),
-                        );
-                      },
-                    ),
-                  ),
+                  prefs?.getString('level') != "dosen"
+                      ? TextField(
+                          keyboardType: TextInputType.text,
+                          obscureText: false,
+                          enabled: prefs?.getString('level') != "dosen",
+                          onChanged: (value) => {},
+                          textInputAction: TextInputAction.next,
+                          maxLines: 1,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.outline),
+                          decoration: InputDecoration(
+                            errorText: prefs?.getString('level') != "dosen"
+                                ? null
+                                : "belum diisi",
+                            hintStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 6),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.outline,
+                                width: 1,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.outline,
+                                width: 1,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.error,
+                                width: 1,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.error,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        )
+                      : TableCalendar(
+                          calendarFormat: _calendarFormat,
+                          availableCalendarFormats: const {
+                            CalendarFormat.month: "Month"
+                          },
+                          onFormatChanged: (format) {},
+                          focusedDay: _focusedDay,
+                          firstDay: _firstDay,
+                          lastDay: _lastDay,
+                          onPageChanged: (focusedDay) {
+                            setState(() {
+                              _focusedDay = focusedDay;
+                            });
+                          },
+                          selectedDayPredicate: (day) =>
+                              isSameDay(day, _selectedDay),
+                          onDaySelected: (selectedDay, focusedDay) {
+                            setState(() {
+                              _selectedDay = selectedDay;
+                              _focusedDay = focusedDay;
+                            });
+                          },
+                          calendarStyle: CalendarStyle(
+                            weekendTextStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            selectedDecoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
+                            ),
+                          ),
+                          calendarBuilders: CalendarBuilders(
+                            headerTitleBuilder: (context, day) {
+                              return Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    DateFormat('dd/MMMM/yyyy').format(day)),
+                              );
+                            },
+                          ),
+                        ),
                 ],
               ),
             ),
