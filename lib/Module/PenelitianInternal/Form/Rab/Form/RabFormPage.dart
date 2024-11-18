@@ -172,11 +172,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesKelompok,
-                    filteredNotifier: filteredKelompok,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredKelompok);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesKelompok,
+                        filteredNotifier: filteredKelompok,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredKelompok);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -188,13 +193,18 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesKomponen,
-                    filteredNotifier: filteredKomponen,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredKomponen);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesKomponen,
+                        filteredNotifier: filteredKomponen,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredKomponen);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                        eventChange: () {},
+                      );
                     },
-                    eventChange: () {},
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -262,13 +272,18 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesSatuan,
-                    filteredNotifier: filteredSatuan,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredSatuan);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesSatuan,
+                        filteredNotifier: filteredSatuan,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredSatuan);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                        eventChange: () {},
+                      );
                     },
-                    eventChange: () {},
                   ),
                   const SizedBox(height: 10),
                   Text(

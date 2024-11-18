@@ -148,11 +148,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesKategori,
-                    filteredNotifier: filteredKategori,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredKategori);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesKategori,
+                        filteredNotifier: filteredKategori,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredKategori);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -164,19 +169,24 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesLuaran,
-                    filteredNotifier: filteredLuaran,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredLuaran);
-                    },
-                    eventChange: () {
-                      if (badgesLuaran.value.isNotEmpty) {
-                        _statusController.text =
-                            badgesLuaran.value.first.extra.toString();
-                      } else {
-                        _statusController.text = "";
-                      }
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesLuaran,
+                        filteredNotifier: filteredLuaran,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredLuaran);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                        eventChange: () {
+                          if (badgesLuaran.value.isNotEmpty) {
+                            _statusController.text =
+                                badgesLuaran.value.first.extra.toString();
+                          } else {
+                            _statusController.text = "";
+                          }
+                        },
+                      );
                     },
                   ),
                   const SizedBox(height: 10),

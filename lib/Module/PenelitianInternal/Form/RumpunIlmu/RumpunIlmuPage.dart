@@ -191,11 +191,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesRumpunIlmu1,
-                    filteredNotifier: filteredRumpunIlmu1,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredRumpunIlmu1);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesRumpunIlmu1,
+                        filteredNotifier: filteredRumpunIlmu1,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredRumpunIlmu1);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -207,11 +212,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesRumpunIlmu2,
-                    filteredNotifier: filteredRumpunIlmu2,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredRumpunIlmu2);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesRumpunIlmu2,
+                        filteredNotifier: filteredRumpunIlmu2,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredRumpunIlmu2);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -223,11 +233,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesRumpunIlmu3,
-                    filteredNotifier: filteredRumpunIlmu3,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredRumpunIlmu3);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesRumpunIlmu3,
+                        filteredNotifier: filteredRumpunIlmu3,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredRumpunIlmu3);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),

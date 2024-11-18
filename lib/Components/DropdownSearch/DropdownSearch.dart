@@ -10,12 +10,14 @@ class DropdownSearch extends StatefulWidget {
   final ValueNotifier<List<DropdownItems>> filteredNotifier;
   final Future<void> Function(String query) fetchUsers;
   final Function()? eventChange;
+  final double? heightFactor;
 
   const DropdownSearch({
     Key? key,
     required this.badgesNotifier,
     required this.filteredNotifier,
     required this.fetchUsers,
+    this.heightFactor = 0.5,
     this.eventChange,
   }) : super(key: key);
 
@@ -46,7 +48,7 @@ class _DropdownSearchState extends State<DropdownSearch> {
         _focusNode.requestFocus();
         FocusScope.of(context).requestFocus(_focusNode);
         print("focus: ${_focusNode.hasFocus}");
-        _showBottomSheet(context);
+        _showBottomSheet(context, widget.heightFactor);
       },
       child: ValueListenableBuilder<List<dynamic>>(
         valueListenable: widget.badgesNotifier,
@@ -105,13 +107,16 @@ class _DropdownSearchState extends State<DropdownSearch> {
     );
   }
 
-  Future<void> _showBottomSheet(BuildContext context) async {
-    final result = await showModalBottomSheet(
+  Future<void> _showBottomSheet(
+    BuildContext context,
+    double? heightFactor,
+  ) async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (contextSheet) {
         return FractionallySizedBox(
-          heightFactor: 0.5,
+          heightFactor: heightFactor ?? 0.5,
           widthFactor: 1.0,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -190,11 +190,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesPrioritasRiset,
-                    filteredNotifier: filteredPrioritasRiset,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredPrioritasRiset);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesPrioritasRiset,
+                        filteredNotifier: filteredPrioritasRiset,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredPrioritasRiset);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -206,11 +211,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesBidangFokus,
-                    filteredNotifier: filteredBidangFokus,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredBidangFokus);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesBidangFokus,
+                        filteredNotifier: filteredBidangFokus,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredBidangFokus);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -222,11 +232,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesTema,
-                    filteredNotifier: filteredTema,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredTema);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesTema,
+                        filteredNotifier: filteredTema,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredTema);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
@@ -238,11 +253,16 @@ class _ContentState extends State<Content> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  DropdownSearch(
-                    badgesNotifier: badgesTopik,
-                    filteredNotifier: filteredTopik,
-                    fetchUsers: (query) async {
-                      await _fetchData(query, filteredTopik);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownSearch(
+                        badgesNotifier: badgesTopik,
+                        filteredNotifier: filteredTopik,
+                        fetchUsers: (query) async {
+                          await _fetchData(query, filteredTopik);
+                        },
+                        heightFactor: constraints.maxWidth >= 540 ? 0.9 : null,
+                      );
                     },
                   ),
                   const SizedBox(height: 10),
