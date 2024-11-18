@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      home: SafeArea(child: AnggotaPenelitiNonDosenPage()),
+      home: SafeArea(child: LoginPage()),
     );
   }
 }
