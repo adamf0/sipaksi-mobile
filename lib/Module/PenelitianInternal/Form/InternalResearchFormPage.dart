@@ -472,7 +472,9 @@ class _ContentState extends State<Content> {
       builder: (context, constraints) {
         List<Widget> x = [];
         print("width: ${constraints.maxWidth}");
+
         if (constraints.maxWidth >= 540) {
+          x.add(SizedBox(height: 10));
           x.add(
             StepBreadCrumb.createBreadCrumb(context: context, list: [
               ItemStepCreadCrumb(
@@ -512,7 +514,6 @@ class _ContentState extends State<Content> {
                   height: 2,
                 )
               : SizedBox.shrink(),
-          const SizedBox(height: 15),
           prefs?.getString('level') == "dosen" ||
                   prefs?.getString('level') == null
               ? const Header()
@@ -542,7 +543,6 @@ class _ContentState extends State<Content> {
           margin: EdgeInsets.only(
             left: widget.width * .01,
             right: widget.width * .01,
-            top: 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

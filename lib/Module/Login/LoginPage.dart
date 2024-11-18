@@ -28,13 +28,16 @@ class _LoginPageState extends State<LoginPage> {
           return constraints.maxWidth >= 540
               ? Row(
                   children: [
-                    Expanded(
+                    Flexible(
+                      flex: 1,
                       child: Image.asset(
                         'lib/assets/images/ilustrasi1.png',
                         fit: BoxFit.fill,
+                        height: double.infinity,
                       ),
                     ),
-                    Expanded(
+                    Flexible(
+                      flex: 1,
                       child: SectionLogin(
                         isShowPassword: isShowPassword,
                         togglePasswordVisibility: togglePasswordVisibility,

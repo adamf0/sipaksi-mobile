@@ -13,6 +13,7 @@ import 'package:sipaksi/Module/Notification/List/NotificationPage.dart';
 import 'package:sipaksi/Module/PenelitianInternal/List/InternalResearchCatalogPage.dart';
 import 'package:sipaksi/Module/Shared/Module.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sipaksi/Module/Helpers/Utility.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -101,7 +102,8 @@ class _DashboardPageState extends State<DashboardPage> {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return Container(
-                    margin: EdgeInsets.fromLTRB(20, (_height * .05), 20, 30),
+                    margin: EdgeInsets.fromLTRB(
+                        20, clampValue(10, 10 + (_height * .018), 20), 20, 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -170,9 +172,9 @@ class _DashboardPageState extends State<DashboardPage> {
           // For mobile: Use a single column layout
           return Column(
             children: [
-              IdSintaCard(height: height * 0.12, IdSinta: "123"),
+              IdSintaCard(IdSinta: "123"),
               const SizedBox(height: 10),
-              JabatanFungsionalCard(height: height * 0.12),
+              JabatanFungsionalCard(),
             ],
           );
         } else {
@@ -180,11 +182,15 @@ class _DashboardPageState extends State<DashboardPage> {
           return Row(
             children: [
               Expanded(
-                child: IdSintaCard(height: height * 0.2, IdSinta: "123"),
+                child: IntrinsicHeight(
+                  child: IdSintaCard(IdSinta: "123"),
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: JabatanFungsionalCard(height: height * 0.2),
+                child: IntrinsicHeight(
+                  child: JabatanFungsionalCard(),
+                ),
               ),
             ],
           );
@@ -197,7 +203,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   double _getMenuHeight(double height, double maxWidth) {
-    return maxWidth >= 540 ? height * .2 : height * .15;
+    return maxWidth >= 540
+        ? clampValue(100, height * .28, 200)
+        : clampValue(60, height * .15, 150);
   }
 
   changeMode(BuildContext context, List<String> listMode) async {
@@ -383,10 +391,7 @@ class ButtonQuestion extends StatelessWidget {
 class JabatanFungsionalCard extends StatelessWidget {
   const JabatanFungsionalCard({
     super.key,
-    required this.height,
   });
-
-  final double height;
 
   Future<void> openWhatsApp(String phoneNumber, String message) async {
     final Uri whatsappUrl = Uri.parse(
@@ -407,11 +412,13 @@ class JabatanFungsionalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
+        height: 150,
         padding: const EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -455,9 +462,8 @@ class JabatanFungsionalCard extends StatelessWidget {
                 ],
               ),
             ),
-            // SizedBox or fixed height to prevent RenderBox error
-            SizedBox(
-              height: height,
+            Flexible(
+              flex: 2,
               child: Image.asset(
                 'lib/assets/images/image1.png',
                 fit: BoxFit.contain,
@@ -473,22 +479,22 @@ class JabatanFungsionalCard extends StatelessWidget {
 class IdSintaCard extends StatelessWidget {
   const IdSintaCard({
     super.key,
-    required this.height,
     this.IdSinta,
   });
 
-  final double height;
   final String? IdSinta;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Container(
+        height: 150, // Pastikan tinggi konsisten
         padding: const EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -571,9 +577,8 @@ class IdSintaCard extends StatelessWidget {
                 ],
               ),
             ),
-            // SizedBox or fixed height to prevent RenderBox error
-            SizedBox(
-              height: height,
+            Flexible(
+              flex: 2,
               child: Image.asset(
                 'lib/assets/images/image1.png',
                 fit: BoxFit.contain,
